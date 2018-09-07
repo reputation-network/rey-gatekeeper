@@ -1,0 +1,22 @@
+# OSX
+#
+.DS_Store
+
+# node.js
+#
+node_modules/
+*.log
+
+# test reports
+#
+.nyc_output
+coverage/
+spike*
+
+# npm lock file (we use yarn)
+#
+package-lock.json
+
+# e2e
+#
+.contract_info/

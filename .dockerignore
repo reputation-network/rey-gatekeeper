@@ -1,0 +1,9 @@
+# Ignore everything by default
+*
+
+# Allow only relevant parts of the project
+!src/
+!test/
+!package.json
+!yarn.lock
+!tsconfig.json
