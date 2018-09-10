@@ -41,5 +41,9 @@ RUN apk add --no-cache curl
 HEALTHCHECK --interval=5m --timeout=5s --start-period=5s --retries=3 \
     CMD curl -i http://localhost:8080/healthcheck || exit 1
 
+# Add Tini, see: https://github.com/krallin/tini/issues/8
+RUN apk add --no-cache tini
+ENTRYPOINT ["/sbin/tini", "--"]
+
 EXPOSE 8080
 CMD [ "node", "src/server.js" ]
