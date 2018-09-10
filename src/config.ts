@@ -12,7 +12,7 @@ export type Config = ReturnType<typeof config>;
 export default function config() {
   dotenv.config();
   return {
-    TARGET: requireEnvironmentVariable("TARGET"),
+    TARGET_URL: requireEnvironmentVariable("TARGET_URL"),
     ETH_NODE_URL: requireEnvironmentVariable("ETH_NODE_URL"),
     APP_ADDRESS: requireEnvironmentVariable("APP_ADDRESS"),
     PORT: process.env.PORT || "8080",

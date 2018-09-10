@@ -11,7 +11,7 @@ import logger from "./_utils/logger";
 function makeContext(conf: Partial<Config> = {}) {
   const ctx = new Context(Object.assign<Config, Partial<Config>>({
     ETH_NODE_URL: "http://localhost:8545",
-    TARGET: "http://localhost:1024",
+    TARGET_URL: "http://localhost:1024",
     LOG_LEVEL: "info",
     ENABLE_HTTP_LOG: false,
     PORT: "8080",
@@ -28,7 +28,7 @@ describe("Gatekeeper server", () => {
   // Setup a new server context each time
   let ctx: Context;
   beforeEach("setup context", () => {
-    ctx = makeContext({ TARGET: "http://localhost:1024" });
+    ctx = makeContext({ TARGET_URL: "http://localhost:1024" });
   });
   // Setup a spied target server for every test
   let targetServer: http.Server;
@@ -111,7 +111,7 @@ describe("Gatekeeper server", () => {
 
   describe("when proxying to target server", () => {
     it("adds the auth section of the target url as authorization", async () => {
-      const ctxWithTargetAuth = makeContext({ TARGET: "http://user:pass@localhost:1024" });
+      const ctxWithTargetAuth = makeContext({ TARGET_URL: "http://user:pass@localhost:1024" });
       sinon.stub(ctxWithTargetAuth, "gatekeeperMiddleware").get(() => gatekeeperMiddleware);
       ctxWithTargetAuth.logger.silent = true;
       const gatekeeperServer = makeGatekeeperServer(ctxWithTargetAuth);
@@ -122,7 +122,7 @@ describe("Gatekeeper server", () => {
     });
 
     it("uses the path section from the target url as base url for requests", async () => {
-      const ctxWithTargetPath = makeContext({ TARGET: "http://localhost:1024/api/v3" });
+      const ctxWithTargetPath = makeContext({ TARGET_URL: "http://localhost:1024/api/v3" });
       ctxWithTargetPath.logger.silent = true;
       sinon.stub(ctxWithTargetPath, "gatekeeperMiddleware").get(() => gatekeeperMiddleware);
       const gatekeeperServer = makeGatekeeperServer(ctxWithTargetPath);

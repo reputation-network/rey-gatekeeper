@@ -73,7 +73,7 @@ export default class AppContext {
   public get proxyMiddleware(): RequestHandler {
     return makeProxyMiddleware({
       logger: this.logger,
-      target: this.config.TARGET,
+      target: this.config.TARGET_URL,
     });
   }
 
