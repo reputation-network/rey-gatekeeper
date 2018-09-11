@@ -13,7 +13,7 @@ export default function makeProxyMiddleware(opts: IProxyMiddlewareOptions) {
   const url = URL.parse(opts.target);
   const proxyOptions: Partial<proxy.Config> = {
     // logging options
-    logLevel: "debug",
+    logLevel: opts.logger.level as any,
     logProvider: () => opts.logger,
     // Target settings
     auth: url.auth,
