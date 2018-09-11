@@ -45,6 +45,7 @@ export function httpManifestController(url: URL.Url, logger: Logger): RequestHan
     logLevel: logger.level as any,
     logProvider: () => logger,
     target: url.href,
+    auth: url.auth,
     xfwd: true,
   };
   if (url.protocol === "https:") {
