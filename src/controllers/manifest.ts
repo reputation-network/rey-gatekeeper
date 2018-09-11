@@ -46,6 +46,7 @@ export function httpManifestController(url: URL.Url, logger: Logger): RequestHan
     logProvider: () => logger,
     target: url.href,
     auth: url.auth,
+    prependPath: false,
     xfwd: true,
   };
   if (url.protocol === "https:") {
@@ -56,5 +57,5 @@ export function httpManifestController(url: URL.Url, logger: Logger): RequestHan
       },
     });
   }
-  return proxy(proxyOptions);
+  return proxy("/manifest", proxyOptions);
 }
