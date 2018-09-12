@@ -88,11 +88,11 @@ describe("Gatekeeper middleware", () => {
       expect(req.headers).not.to.haveOwnProperty("x-permission-subject");
       await gk(req, res, next);
       expect(req.headers).to.haveOwnProperty("x-permission-source")
-        .which.equals(Buffer.from(appParams.request.readPermission.source).toString("base64"));
+        .which.equals(Buffer.from(JSON.stringify(appParams.request.readPermission.source)).toString("base64"));
       expect(req.headers).to.haveOwnProperty("x-permission-subject")
-        .which.equals(Buffer.from(appParams.request.readPermission.subject).toString("base64"));
+        .which.equals(Buffer.from(JSON.stringify(appParams.request.readPermission.subject)).toString("base64"));
       expect(req.headers).to.haveOwnProperty("x-permission-reader")
-        .which.equals(Buffer.from(appParams.request.readPermission.reader).toString("base64"));
+        .which.equals(Buffer.from(JSON.stringify(appParams.request.readPermission.reader)).toString("base64"));
     });
     it("adds the appParams.extraReadPermissions fields x-headers to the req", async () => {
       expect(req.headers).not.to.haveOwnProperty("x-extra-read-permissions");

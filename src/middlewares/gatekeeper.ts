@@ -86,22 +86,32 @@ function validateAuthorizationHeader(auth: [string, string] | null): string {
 function addXPermissionHeaders(appParams: AppParams, req: express.Request) {
   const readPermission = appParams.request.readPermission;
   Object.assign(req.headers, {
-    "x-permission-reader": Buffer.from(readPermission.reader).toString("base64"),
-    "x-permission-source": Buffer.from(readPermission.source).toString("base64"),
-    "x-permission-subject": Buffer.from(readPermission.subject).toString("base64"),
+    "x-permission-reader": encodeHeaderValue(readPermission.reader),
+    "x-permission-source": encodeHeaderValue(readPermission.source),
+    "x-permission-subject": encodeHeaderValue(readPermission.subject),
   });
 }
 
 function addSessionHeader(appParams: AppParams, req: express.Request) {
   const session = appParams.request.session;
   Object.assign(req.headers, {
-    "x-session": Buffer.from(JSON.stringify(session)).toString("base64"),
+    "x-session": encodeHeaderValue(session),
   });
 }
 
 function addExtraReadPermissionsHeader(appParams: AppParams, req: express.Request) {
   const extraReadPermissions = appParams.extraReadPermissions;
   Object.assign(req.headers, {
-    "x-extra-read-permissions": Buffer.from(JSON.stringify(extraReadPermissions)).toString("base64"),
+    "x-extra-read-permissions": encodeHeaderValue(extraReadPermissions),
   });
+}
+
+/**
+ * Returns a header-safe value of the provided mixed value.
+ * Encode: base64.generate(json.generate(value))
+ * Decode: json.parse(base64.parse(encoded))
+ * @param value
+ */
+function encodeHeaderValue(value: any): string {
+  return Buffer.from(JSON.stringify(value)).toString("base64");
 }
