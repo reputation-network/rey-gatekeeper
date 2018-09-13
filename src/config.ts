@@ -13,7 +13,7 @@ export default function config() {
   dotenv.config();
   return {
     TARGET_URL: requireEnvironmentVariable("TARGET_URL"),
-    ETH_NODE_URL: requireEnvironmentVariable("ETH_NODE_URL"),
+    BLOCKCHAIN_NODE_URL: requireEnvironmentVariable("BLOCKCHAIN_NODE_URL"),
     APP_ADDRESS: requireEnvironmentVariable("APP_ADDRESS"),
     PORT: process.env.PORT || "8080",
     LOG_LEVEL: process.env.LOG_LEVEL || "info",

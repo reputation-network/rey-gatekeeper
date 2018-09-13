@@ -10,7 +10,7 @@
 $ docker run -it \
   -p 8080:8080 \
   -e TARGET_URL="http://user:pass@acme.score.com:9000" \
-  -e ETH_NODE_URL="https://user:secret@ethereum.io:8545" \
+  -e BLOCKCHAIN_NODE_URL="https://user:secret@ethereum.io:8545" \
   -e APP_ADDRESS="0x0000000000000000000000000000000000000000" \
   reputationnetwork/gatekeeper
 ```
@@ -19,7 +19,7 @@ $ docker run -it \
 ```Dockerfile
 FROM reputationnetwork/gatekeeper:latest
 ENV TARGET_URL http://user:pass@acme.score.com:9000
-ENV ETH_NODE_URL="https://user:secret@ethereum.io:8545"
+ENV BLOCKCHAIN_NODE_URL="https://user:secret@ethereum.io:8545"
 ENV APP_ADDRESS="0x0000000000000000000000000000000000000000"
 
 # OPTIONAL: Make GK serve the manifest
@@ -31,7 +31,7 @@ ENV MANIFEST_URL "file:///app/rey-manifest.json"
 A gatekeeper instances can be configured and tweaked via the following environment variables, the ones marked in **bold** are required for the server to start:
 
 - **TARGET_URL**: The base url of the API where a REY app is running. This url can have auth and path. Auth will be used as basic authorization between gatekeeper and the target. Path will be used as a path prefix for every request that reaches the gatekeeper server.
-- **ETH_NODE_URL**: Url of the ethereum node to connect to for executing smart contract calls.
+- **BLOCKCHAIN_NODE_URL**: Url of the ethereum node to connect to for executing smart contract calls.
 - **APP_ADDRESS**: The app address this gatekeeper instance is providing validation for.
 - *PORT*: Port to listen, defaults to `8080`
 - *LOG_LEVEL*: Minimum log level, defaults to `info`

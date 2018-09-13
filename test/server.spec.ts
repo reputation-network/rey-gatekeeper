@@ -10,7 +10,7 @@ import logger from "./_utils/logger";
 
 function makeContext(conf: Partial<Config> = {}) {
   const ctx = new Context(Object.assign<Config, Partial<Config>>({
-    ETH_NODE_URL: "http://localhost:8545",
+    BLOCKCHAIN_NODE_URL: "http://localhost:8545",
     TARGET_URL: "http://localhost:1024",
     LOG_LEVEL: "info",
     ENABLE_HTTP_LOG: false,

@@ -86,7 +86,7 @@ export default class AppContext {
 
   @Memoize()
   public get web3(): Web3 {
-    return new Web3(this.config.ETH_NODE_URL);
+    return new Web3(this.config.BLOCKCHAIN_NODE_URL);
   }
 
   @Memoize()
