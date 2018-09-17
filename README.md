@@ -1,4 +1,8 @@
 # REY Gatekeeper
+[![Build Status][travis-image]][travis-url]
+[![Coverage][codecov-image]][codecov-url]
+[![Dependency Status][depstat-image]][depstat-url]
+
 > :warning: **WARNING:** This project is still in alpha, so the interface might change in the near future
 
 ## Usage
@@ -91,3 +95,10 @@ First of all, you can always try to debug your problem adding logger statements 
 
 ## LICENSE
 MIT © 2018 [Reputation Network](./LICENSE)
+
+[travis-image]: https://travis-ci.org/reputation-network/rey-gatekeeper.svg?branch=master
+[travis-url]: https://travis-ci.org/reputation-network/rey-gatekeeper
+[codecov-image]: https://codecov.io/github/reputation-network/rey-gatekeeper/coverage.svg?branch=master
+[codecov-url]: https://codecov.io/github/reputation-network/rey-gatekeeper?branch=master
+[depstat-image]: https://img.shields.io/david/reputation-network/rey-gatekeeper/master.svg
+[depstat-url]: https://david-dm.org/reputation-network/rey-gatekeeper

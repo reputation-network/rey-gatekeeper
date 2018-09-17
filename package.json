@@ -51,13 +51,11 @@
     "build": "tsc --skipLibCheck --listEmittedFiles",
     "start": "ts-node -r tsconfig-paths/register src/server.ts",
     "test": "NODE_ENV=test mocha \"test/**/*.spec.ts\"",
-    "test:coverage": "NODE_ENV=test nyc mocha \"test/**/*.spec.ts\"",
-    "init-e2e": "ts-node test/e2e/init.ts"
+    "test-ci": "NODE_ENV=test nyc mocha \"test/**/*.spec.ts\""
   },
   "nyc": {
     "extension": [
-      ".ts",
-      ".tsx"
+      ".ts"
     ],
     "include": [
       "src/**/*"
@@ -66,7 +64,7 @@
       "**/*.d.ts"
     ],
     "reporter": [
-      "html"
+      "lcov"
     ],
     "all": true
   }
