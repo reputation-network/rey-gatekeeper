@@ -5,8 +5,9 @@ cache:
   directories:
     - node_modules
 script:
-  - npm run test-ci
-  - npm run lint
+  - yarn lint
+  - yarn test-ci
+  - yarn e2e 
 after_script:
   - yarn add codecov
   - node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov
