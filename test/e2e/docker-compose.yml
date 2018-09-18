@@ -1,0 +1,43 @@
+version: "3.6"
+services:
+  blockchain_node:
+    image: reputationnetwork/node
+    command: yarn geth --rpcvhosts=*
+    networks:
+      blockchain:
+  app:
+    image: kennethreitz/httpbin
+    networks:
+      app:
+  gatekeeper:
+    build:
+      context: ../..
+      target: production
+    environment:
+      TARGET_URL: http://user:password@app/anything/api/1/
+      BLOCKCHAIN_NODE_URL: http://blockchain_node:8545
+      APP_ADDRESS: "0x1563915e194d8cfba1943570603f7606a3115508"
+      REY_CONTRACT_ADDRESS: "0x76C19376b275A5d77858c6F6d5322311eEb92cf5"
+    depends_on:
+      - app
+      - blockchain_node
+    networks:  
+      blockchain:
+      app:
+      default:
+        aliases:
+          - score.acme.co
+  e2e:
+    build:
+      context: ../..
+      target: development
+    command: "sh -c 'sleep 10 && yarn test:e2e'"
+    environment:
+      SUT_URL: "http://score.acme.co:8080/"
+    depends_on:
+      - gatekeeper
+
+networks:
+  blockchain:
+  app:
+  default:
