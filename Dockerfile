@@ -2,10 +2,10 @@
 FROM node:8-alpine AS development_depenendecies
 
 WORKDIR /app
-# FIXME: This is required to install the experimental abi web3 package
-# Once it gets released on npm, we will probably not need this
-RUN apk add --no-cache git python make g++
-RUN yarn global add lerna
+# This is required to install packages from github
+RUN apk add --no-cache git
+# This is required for compiling some node-gyp bindings
+RUN apk add --no-cache python make g++
 
 COPY package.json ./
 COPY yarn.lock ./
