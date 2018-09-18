@@ -12,6 +12,7 @@ import makeManifestController from "./controllers/manifest";
 import makeErrorHandlerMiddleware from "./middlewares/error-handler";
 import makeGatekeeperMiddleware from "./middlewares/gatekeeper";
 import makeProxyMiddleware from "./middlewares/proxy";
+import makeXPoweredByMiddleware from "./middlewares/x-powered-by";
 
 export default class AppContext {
   private config: Config;
@@ -75,6 +76,11 @@ export default class AppContext {
       logger: this.logger,
       target: this.config.TARGET_URL,
     });
+  }
+
+  @Memoize()
+  public get xPoweredByMiddleware(): RequestHandler {
+    return makeXPoweredByMiddleware();
   }
 
   @Memoize()

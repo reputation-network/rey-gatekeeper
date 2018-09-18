@@ -6,7 +6,7 @@ import Context from "./context";
 
 export default function makeGatekeeperServer(ctx: Context) {
   const app = express();
-  app.set("x-powered-by", "REY Gatekeeper");
+  app.use(ctx.xPoweredByMiddleware);
   app.use(morgan("combined", { stream: ctx.morganStream }));
   app.use(cors({ origin: true, methods: "GET,HEAD", credentials: true }));
   app.get("/healthcheck", ctx.healthcheckController);
