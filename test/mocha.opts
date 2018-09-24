@@ -1,5 +1,4 @@
 --require ts-node/register
---require tsconfig-paths/register
 --require ./test/_utils/common.ts
 --require source-map-support/register
 --recursive

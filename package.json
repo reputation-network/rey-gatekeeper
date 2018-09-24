@@ -41,7 +41,6 @@
     "morgan": "^1.9.0",
     "rey-sdk": "reputation-network/rey-sdk-js#0.1.0-alpha.4",
     "ts-node": "^6.1.1",
-    "tsconfig-paths": "^3.5.0",
     "typescript": "^2.9.1",
     "web3-eth-accounts": "^1.0.0-beta.36",
     "web3-utils": "^1.0.0-beta.36",
@@ -50,7 +49,7 @@
   "scripts": {
     "lint": "tslint -p .",
     "build": "tsc --skipLibCheck --listEmittedFiles",
-    "start": "ts-node -r tsconfig-paths/register src/server.ts",
+    "start": "ts-node src/server.ts",
     "test": "NODE_ENV=test mocha \"test/**/*.spec.ts\"",
     "test:e2e": "NODE_ENV=test mocha \"test/**/*.e2e.ts\"",
     "test-ci": "NODE_ENV=test nyc mocha \"test/**/*.spec.ts\"",
