@@ -1,6 +1,5 @@
 import { ErrorRequestHandler, RequestHandler } from "express";
 import { StreamOptions as MorganStreamOptions } from "morgan";
-import Web3 from "web3";
 import winston, { Logger } from "winston";
 import { Config } from "./config";
 import Memoize from "./lib/memoize";
@@ -91,15 +90,10 @@ export default class AppContext {
   }
 
   @Memoize()
-  public get web3(): Web3 {
-    return new Web3(this.config.BLOCKCHAIN_NODE_URL);
-  }
-
-  @Memoize()
   public get reyContract(): IReyContract {
     return new ReyEthContract({
-      web3: this.web3,
       logger: this.logger,
+      blockchainNodeUrl: this.config.BLOCKCHAIN_NODE_URL,
       appAddress: this.config.APP_ADDRESS,
       contractAddress: this.config.REY_CONTRACT_ADDRESS,
     });

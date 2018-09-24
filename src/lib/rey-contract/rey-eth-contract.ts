@@ -1,26 +1,26 @@
 import { Request } from "rey-sdk";
-import Web3 from "web3";
-import EthContract from "web3/eth/contract";
+import Contract from "web3-eth-contract";
 import winston from "winston";
 import { IReyContract } from "./types";
 import { validateRequest } from "./validations";
 
 interface IReyEthContractOptions {
   logger: winston.Logger;
-  web3: Web3;
+  blockchainNodeUrl: string;
   appAddress: string;
   contractAddress: string;
 }
 
 export default class ReyEthContract implements IReyContract {
   private logger: winston.Logger;
-  private contract: EthContract;
+  private contract: Contract;
   private appAddress: string;
   private readonly CONTRACT_ABI = require("./contract-abi.json");
 
   constructor(opts: IReyEthContractOptions) {
     this.logger = opts.logger;
-    this.contract = new opts.web3.eth.Contract(this.CONTRACT_ABI, opts.contractAddress);
+    Contract.setProvider(opts.blockchainNodeUrl);
+    this.contract = new Contract(this.CONTRACT_ABI, opts.contractAddress);
     this.appAddress = opts.appAddress;
   }
 

@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import * as sinon from "sinon";
-import Web3 from "web3";
+import Contract from "web3-eth-contract";
 import { ReyEthContract } from "../../../src/lib/rey-contract";
 import logger from "../../_utils/logger";
 import { request } from "./_fixtures";
@@ -8,10 +8,9 @@ import { request } from "./_fixtures";
 describe("ReyEthContract", () => {
   const contractAddress = "0x1234567890abcdef1234567890abcdef12345678";
   const appAddress = request.readPermission.source;
-  const contractAbi = require("../../../src/lib/rey-contract/contract-abi.json");
-  const web3 = new Web3("http://localhost:8545/");
+  const blockchainNodeUrl = "http://localhost:8545/";
   const makeReyEthContract = () => {
-    return new ReyEthContract({ web3, logger, contractAddress, appAddress });
+    return new ReyEthContract({ blockchainNodeUrl, logger, contractAddress, appAddress });
   };
 
   afterEach(() => {
@@ -20,10 +19,11 @@ describe("ReyEthContract", () => {
 
   describe("new ReyEthContract(...)", () => {
     it("creates a new Web3#eth.Contract with the provided Ethereum Contract Address", () => {
-      const EthContract = sinon.spy(web3.eth, "Contract");
       const reyContract = makeReyEthContract();
-      expect(EthContract.calledWithNew()).to.equal(true);
-      expect(EthContract).to.have.been.calledWith(contractAbi, contractAddress);
+      const ethContract = (reyContract as any).contract;
+      expect(ethContract).to.be.an.instanceof(Contract);
+      expect(ethContract._address.toLowerCase()).to.be.equal(contractAddress);
+      expect(ethContract._provider.host).to.be.equal(blockchainNodeUrl);
     });
   });
 

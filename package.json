@@ -43,7 +43,8 @@
     "ts-node": "^6.1.1",
     "tsconfig-paths": "^3.5.0",
     "typescript": "^2.9.1",
-    "web3": "^1.0.0-beta.36",
+    "web3-eth-accounts": "^1.0.0-beta.36",
+    "web3-utils": "^1.0.0-beta.36",
     "winston": "^3.0.0"
   },
   "scripts": {
