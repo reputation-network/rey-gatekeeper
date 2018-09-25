@@ -13,7 +13,7 @@
 ```
 $ docker run -it \
   -p 8080:8080 \
-  -e TARGET_URL="http://user:pass@acme.score.com:9000" \
+  -e TARGET_APP_URL="http://user:pass@acme.score.com:9000" \
   -e BLOCKCHAIN_NODE_URL="https://user:secret@ethereum.io:8545" \
   -e APP_ADDRESS="0x0000000000000000000000000000000000000000" \
   reputationnetwork/gatekeeper
@@ -22,49 +22,23 @@ $ docker run -it \
 ### Via Dockerfile
 ```Dockerfile
 FROM reputationnetwork/gatekeeper:latest
-ENV TARGET_URL http://user:pass@acme.score.com:9000
+ENV TARGET_APP_URL http://user:pass@acme.score.com:9000
 ENV BLOCKCHAIN_NODE_URL="https://user:secret@ethereum.io:8545"
 ENV APP_ADDRESS="0x0000000000000000000000000000000000000000"
-
-# OPTIONAL: Make GK serve the manifest
-COPY ./rey-manifest.json ./rey-manifest.json
-ENV MANIFEST_URL "file:///app/rey-manifest.json"
 ```
 
 ## Config
-A gatekeeper instances can be configured and tweaked via the following environment variables, the ones marked in **bold** are required for the server to start:
+Gatekeeper will proxy all requests that reach it to a target server, defined by `TARGET_APP_URL`. Requests to the endpoint defined by `SECURED_PATH` will require an authorization header that is compliant with the REY spec of app access requests.
 
-- **TARGET_URL**: The base url of the API where a REY app is running. This url can have auth and path. Auth will be used as basic authorization between gatekeeper and the target. Path will be used as a path prefix for every request that reaches the gatekeeper server.
+A gatekeeper instance can be configured and tweaked via the following environment variables, the ones marked in **bold** are required for the server to start:
+
+- **TARGET_APP_URL**: The base of the API where a REY app is running. If url includes auth, it will be used as basic authorization between gatekeeper and the target.
 - **BLOCKCHAIN_NODE_URL**: Url of the ethereum node to connect to for executing smart contract calls.
 - **APP_ADDRESS**: The app address this gatekeeper instance is providing validation for.
 - *PORT*: Port to listen, defaults to `8080`
 - *LOG_LEVEL*: Minimum log level, defaults to `info`
 - *REY_CONTRACT_ADDRESS*: REY Smart Contract address, defaults to `0x`
-- *MANIFEST_URL*: Fully formed URL pointing to the manifest of the app, supports `file://`(absolute path) and `https://` protocols. Defaults to `""`
-
-## Examples
-
-### As HTTP Requests
-The following HTTP request reaches a running Gatekeeper server where `TARGET` is set to `"https://gatekeeper:secret@socring.acme.co/api/1"`:
-```
-GET /age HTTP/1.1
-Host: public.scoring.acme.co
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0=.eyJ2ZXJzaW9uIjoiM<..OMITED..>.
-```
-
-After validating the `Authorization` header locally and against the REY smart contract,
-Gatekeeper performs a request to the target REY app:
-
-```
-GET /api/1/age HTTP/1.1
-Host: socring.acme.co
-Authorization: Basic ${base64(gatekeeper:secret)}
-X-Permission-Reader: ${base64(0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa)}
-X-Permission-Source: ${base64(0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb)}
-X-Permission-Subject: ${base64(0xcccccccccccccccccccccccccccccccccccccccc)}
-X-Extra-Read-Permissions: ${base64(json([...]))}
-X-Session: ${base64(json([...]))}
-```
+- *SECURED_PATH*: Path where the app is exposed, defaults to `/data`
 
 ## Tests
 ```
@@ -89,9 +63,9 @@ First of all, you can always try to debug your problem adding logger statements 
 - Press **Inspect** for your entry under **Remote Target**
 - Press **Resume Script Execution** once, this will allow the inspector to load the source maps, file strcture and then will stop on the `debugger` statement you placed
 
-## Roadmap
+## TODO List
+- [x] Add integration tests (against a real running contract)
 - [ ] Cashout when sending the response from the app to the client
-- [ ] Add integration tests (against a real running contract)
 
 ## LICENSE
 MIT © 2018 [Reputation Network](./LICENSE)
