@@ -12,13 +12,13 @@ export type Config = ReturnType<typeof config>;
 export default function config() {
   dotenv.config();
   return {
-    TARGET_URL: requireEnvironmentVariable("TARGET_URL"),
+    TARGET_APP_URL: requireEnvironmentVariable("TARGET_APP_URL"),
     BLOCKCHAIN_NODE_URL: requireEnvironmentVariable("BLOCKCHAIN_NODE_URL"),
     APP_ADDRESS: requireEnvironmentVariable("APP_ADDRESS"),
+    SECURED_PATH: process.env.SECURED_PATH || "/data",
     PORT: process.env.PORT || "8080",
     LOG_LEVEL: process.env.LOG_LEVEL || "info",
     ENABLE_HTTP_LOG: Boolean(Number(process.env.ENABLE_HTTP_LOG)),
     REY_CONTRACT_ADDRESS: process.env.REY_CONTRACT_ADDRESS || "0x21ba427fF8a1dDF69f9365D46a4b86594Bb219DD",
-    MANIFEST_URL: process.env.MANIFEST_URL || "",
   };
 }

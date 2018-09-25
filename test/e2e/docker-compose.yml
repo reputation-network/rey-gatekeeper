@@ -14,7 +14,8 @@ services:
       context: ../..
       target: production
     environment:
-      TARGET_URL: http://user:password@app/anything/api/1/
+      TARGET_APP_URL: http://user:password@app
+      SECURED_PATH: /anything/score
       BLOCKCHAIN_NODE_URL: http://blockchain_node:8545
       APP_ADDRESS: "0x1563915e194d8cfba1943570603f7606a3115508"
       REY_CONTRACT_ADDRESS: "0x76C19376b275A5d77858c6F6d5322311eEb92cf5"

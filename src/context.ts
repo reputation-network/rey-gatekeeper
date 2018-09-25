@@ -7,17 +7,16 @@ import { IReyContract, ReyEthContract } from "./lib/rey-contract";
 import { ContractTokenParser, ITokenParser } from "./lib/rey-token-parser";
 
 import makeHealthcheckController from "./controllers/healthcheck";
-import makeManifestController from "./controllers/manifest";
 import makeErrorHandlerMiddleware from "./middlewares/error-handler";
 import makeGatekeeperMiddleware from "./middlewares/gatekeeper";
 import makeProxyMiddleware from "./middlewares/proxy";
 import makeXPoweredByMiddleware from "./middlewares/x-powered-by";
 
 export default class AppContext {
-  private config: Config;
+  public readonly config: Config;
 
   constructor(conf: Config) {
-    this.config = conf;
+    this.config = Object.freeze(conf);
   }
 
   @Memoize()
@@ -55,14 +54,6 @@ export default class AppContext {
   }
 
   @Memoize()
-  public get manifestController(): RequestHandler {
-    return makeManifestController({
-      logger: this.logger,
-      manifestUrl: this.config.MANIFEST_URL,
-    });
-  }
-
-  @Memoize()
   public get gatekeeperMiddleware(): RequestHandler {
     return makeGatekeeperMiddleware({
       tokenParser: this.permissionParser,
@@ -73,7 +64,7 @@ export default class AppContext {
   public get proxyMiddleware(): RequestHandler {
     return makeProxyMiddleware({
       logger: this.logger,
-      target: this.config.TARGET_URL,
+      target: this.config.TARGET_APP_URL,
     });
   }
 

@@ -6,12 +6,11 @@ import Context from "./context";
 
 export default function makeGatekeeperServer(ctx: Context) {
   const app = express();
-  app.use(ctx.xPoweredByMiddleware);
   app.use(morgan("combined", { stream: ctx.morganStream }));
   app.use(cors({ origin: true, methods: "GET,HEAD", credentials: true }));
+  app.use(ctx.xPoweredByMiddleware);
   app.get("/healthcheck", ctx.healthcheckController);
-  app.get("/manifest", ctx.manifestController);
-  app.use(ctx.gatekeeperMiddleware);
+  app.all(ctx.config.SECURED_PATH, ctx.gatekeeperMiddleware);
   app.use(ctx.proxyMiddleware);
   app.use(ctx.errorHandlerMiddleware);
   return app;

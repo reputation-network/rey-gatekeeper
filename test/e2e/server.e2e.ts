@@ -17,7 +17,7 @@ describe("[E2E] Gatekeeper Server", function() {
     it("responds with 400", async () => {
       const token = await generateToken.wrongFormat();
       return request(sutUrl)
-        .get("/score")
+        .get("/anything/score")
         .set("Authorization", `bearer ${token}`)
         .expect((res: request.Response) => {
           expect(res.status).to.equal(400);
@@ -33,7 +33,7 @@ describe("[E2E] Gatekeeper Server", function() {
     it("wrong session subject, responds with 401", async () => {
       const token = await generateToken.wrongSessionSubject();
       return request(sutUrl)
-        .get("/score")
+        .get("/anything/score")
         .set("Authorization", `bearer ${token}`)
         .expect((res: request.Response) => {
           expect(res.status).to.equal(401);
@@ -46,7 +46,7 @@ describe("[E2E] Gatekeeper Server", function() {
     it("expired read permission, responds with 401", async () => {
       const token = await generateToken.expired();
       return request(sutUrl)
-        .get("/score")
+        .get("/anything/score")
         .set("Authorization", `bearer ${token}`)
         .expect((res: request.Response) => {
           expect(res.status).to.equal(401);
@@ -59,7 +59,7 @@ describe("[E2E] Gatekeeper Server", function() {
     it("bad readPermisison signature, responds with 401", async () => {
       const token = await generateToken.wrongSignedPermission();
       return request(sutUrl)
-        .get("/score")
+        .get("/anything/score")
         .set("Authorization", `bearer ${token}`)
         .expect((res: request.Response) => {
           expect(res.status).to.equal(401);
@@ -79,7 +79,7 @@ describe("[E2E] Gatekeeper Server", function() {
 
     it("reach the target server", () => {
       return request(sutUrl)
-        .get("/score")
+        .get("/anything/score")
         .set("Authorization", `bearer ${token}`)
         .expect((res: request.Response) => {
           expect(res.status).to.equal(200);
@@ -88,20 +88,20 @@ describe("[E2E] Gatekeeper Server", function() {
 
     it("reaches the target server with the path specified on GateKeeper TARGET", () => {
       return request(sutUrl)
-        .get("/score")
+        .get("/anything/score")
         .set("Authorization", `bearer ${token}`)
         .expect((res: request.Response) => {
-          // FIXME: We should compare against the TARGET_URL that gatekeeper is using
+          // FIXME: We should compare against the TARGET_APP_URL that gatekeeper is using
           expect(res.body.url).to.match(/\/score$/);
         });
     });
 
     it("reaches the target server with the auth specified on GateKeeper TARGET", () => {
       return request(sutUrl)
-        .get("/score")
+        .get("/anything/score")
         .set("Authorization", `bearer ${token}`)
         .expect((res: request.Response) => {
-          // FIXME: We should compare against the TARGET_URL that gatekeeper is using
+          // FIXME: We should compare against the TARGET_APP_URL that gatekeeper is using
           expect(res.body.headers.Authorization).to
             .equal(`Basic ${Buffer.from("user:password").toString("base64")}`);
         });
