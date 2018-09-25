@@ -14,6 +14,8 @@ services:
       context: ../..
       target: production
     environment:
+      ENABLE_HTTP_LOG: 1
+      LOG_LEVEL: debug
       TARGET_APP_URL: http://user:password@app
       SECURED_PATH: /anything/score
       BLOCKCHAIN_NODE_URL: http://blockchain_node:8545
@@ -34,7 +36,7 @@ services:
       target: development
     command: "sh -c 'sleep 10 && yarn test:e2e'"
     environment:
-      SUT_URL: "http://score.acme.co:8080/"
+      SUT_URL: "http://score.acme.co:8080"
     depends_on:
       - gatekeeper
 
