@@ -42,6 +42,8 @@ HEALTHCHECK --interval=5m --timeout=5s --start-period=5s --retries=3 \
 WORKDIR /app
 COPY --from=production_dependencies /app/node_modules ./node_modules
 COPY --from=tsbuilder /app/src ./src
+COPY --from=tsbuilder /app/package.json ./
+COPY --from=tsbuilder /app/yarn.lock ./
 
 ENV PORT 8080
 EXPOSE 8080
