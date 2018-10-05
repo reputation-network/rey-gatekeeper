@@ -19,6 +19,6 @@ export default function config() {
     PORT: process.env.PORT || "8080",
     LOG_LEVEL: process.env.LOG_LEVEL || "info",
     ENABLE_HTTP_LOG: Boolean(Number(process.env.ENABLE_HTTP_LOG)),
-    REY_CONTRACT_ADDRESS: process.env.REY_CONTRACT_ADDRESS || "0x21ba427fF8a1dDF69f9365D46a4b86594Bb219DD",
+    REY_CONTRACT_ADDRESS: process.env.REY_CONTRACT_ADDRESS || "0x76C19376b275A5d77858c6F6d5322311eEb92cf5",
   };
 }

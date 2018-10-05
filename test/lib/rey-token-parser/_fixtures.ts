@@ -7,6 +7,7 @@ export const appParams = new AppParams({
       reader: `0x${"c".repeat(40)}`,
       source: `0x${"b".repeat(40)}`,
       subject: `0x${"a".repeat(40)}`,
+      manifest: `0x${"d".repeat(64)}`,
       expiration: "1530000000",
       signature: [
         "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
@@ -38,6 +39,7 @@ export const appParams = new AppParams({
       reader: `0x${"e".repeat(40)}`,
       source: `0x${"f".repeat(40)}`,
       subject: `0x${"a".repeat(40)}`,
+      manifest: `0x${"d".repeat(64)}`,
       expiration: "1530000000",
       signature: [
         "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",

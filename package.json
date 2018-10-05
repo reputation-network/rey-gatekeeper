@@ -23,27 +23,22 @@
   "dependencies": {
     "@types/cors": "^2.8.1",
     "@types/dotenv": "^4.0.3",
-    "@types/ethereumjs-util": "^5.2.0",
     "@types/express": "^4.16.0",
     "@types/http-proxy-middleware": "^0.17.4",
     "@types/jsonwebtoken": "^7.2.8",
     "@types/lodash": "^4.14.111",
     "@types/morgan": "^1.7.35",
-    "@types/web3": "^1.0.0",
     "axios": "^0.18.0",
     "cors": "^2.8.1",
     "dotenv": "^6.0.0",
-    "ethereumjs-util": "^5.2.0",
     "express": "^4.16.3",
     "http-proxy-middleware": "^0.18.0",
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.10",
     "morgan": "^1.9.0",
-    "rey-sdk": "reputation-network/rey-sdk-js#0.1.0-alpha.4",
+    "rey-sdk": "reputation-network/rey-sdk-js#0.1.0-alpha.10",
     "ts-node": "^6.1.1",
     "typescript": "^2.9.1",
-    "web3-eth-accounts": "^1.0.0-beta.36",
-    "web3-utils": "^1.0.0-beta.36",
     "winston": "^3.0.0"
   },
   "scripts": {
@@ -52,7 +47,7 @@
     "start": "ts-node src/server.ts",
     "test": "NODE_ENV=test mocha \"test/**/*.spec.ts\"",
     "test:e2e": "NODE_ENV=test mocha \"test/**/*.e2e.ts\"",
-    "test-ci": "NODE_ENV=test nyc mocha \"test/**/*.spec.ts\"",
+    "test-ci": "NODE_ENV=test nyc mocha \"test/**/*.spec.ts\"  --timeout 5000",
     "e2e": "docker-compose -f test/e2e/docker-compose.yml up --build --exit-code-from e2e"
   },
   "nyc": {

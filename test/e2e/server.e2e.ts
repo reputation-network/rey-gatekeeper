@@ -66,7 +66,7 @@ describe("[E2E] Gatekeeper Server", function() {
           expect(res.header).to.haveOwnProperty("x-powered-by")
             .which.equals("REY Gatekeeper");
           expect(res.body).to.haveOwnProperty("error")
-            .which.matches(/invalid.+signature/i);
+            .which.matches(/read permission.+signature/i);
         });
     });
   });

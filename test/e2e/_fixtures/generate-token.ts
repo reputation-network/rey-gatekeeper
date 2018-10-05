@@ -1,25 +1,25 @@
-import * as JWT from "jsonwebtoken";
-import { App, SignStrategies } from "rey-sdk";
+import { Factory, SignStrategies } from "rey-sdk";
 import { dummySignature, encodeUnsignedJwt } from "rey-sdk/dist/utils";
 import DevAccounts from "./accounts";
 
 function buildValidAppParams() {
   const [readerAccount, , subjectAccount] = DevAccounts;
   const [reader, source, subject, verifier] = DevAccounts.map((a) => a.address);
-  const [expiration, fee, nonce, value, counter] = [Date.now(), 0, 1, 0, 1].map((e) => e.toString());
+  const [manifest, expiration] = [`0x${"c".repeat(64)}`, Math.floor(Date.now() / 1000) + 3600];
+  const [fee, nonce, value, counter] = [0, 1, 0, 1].map((e) => e.toString());
 
-  return App.buildAppParams({
+  return Factory.buildAppParams({
     version: "1.0",
     request: {
-      readPermission: { reader, source, subject, expiration },
+      readPermission: { reader, source, subject, manifest, expiration },
       session: { subject, verifier, fee, nonce },
       value,
       counter,
     },
     extraReadPermissions: [],
   }, {
-    readerSignStrategy: SignStrategies.privateKey(readerAccount.privateKey),
-    subjectSignStrategy: SignStrategies.privateKey(subjectAccount.privateKey),
+    reader: SignStrategies.privateKey(readerAccount.privateKey),
+    subject: SignStrategies.privateKey(subjectAccount.privateKey),
   });
 }
 
@@ -70,8 +70,8 @@ export async function wrongSignedPermission() {
     ...appParams,
     request: {
       ...appParams.request,
-      session: {
-        ...appParams.request.session,
+      readPermission: {
+        ...appParams.request.readPermission,
         signature: dummySignature(),
       },
     },

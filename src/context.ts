@@ -1,9 +1,10 @@
 import { ErrorRequestHandler, RequestHandler } from "express";
 import { StreamOptions as MorganStreamOptions } from "morgan";
+import ReyContract from "rey-sdk/dist/contracts/rey";
 import winston, { Logger } from "winston";
 import { Config } from "./config";
 import Memoize from "./lib/memoize";
-import { IReyContract, ReyEthContract } from "./lib/rey-contract";
+import LocalReyContract from "./lib/rey-contract";
 import { ContractTokenParser, ITokenParser } from "./lib/rey-token-parser";
 
 import makeHealthcheckController from "./controllers/healthcheck";
@@ -81,12 +82,11 @@ export default class AppContext {
   }
 
   @Memoize()
-  public get reyContract(): IReyContract {
-    return new ReyEthContract({
-      logger: this.logger,
-      blockchainNodeUrl: this.config.BLOCKCHAIN_NODE_URL,
-      appAddress: this.config.APP_ADDRESS,
-      contractAddress: this.config.REY_CONTRACT_ADDRESS,
-    });
+  public get reyContract(): ReyContract {
+    return new LocalReyContract(
+      this.config.BLOCKCHAIN_NODE_URL,
+      this.config.REY_CONTRACT_ADDRESS,
+      { from: this.config.APP_ADDRESS},
+    );
   }
 }

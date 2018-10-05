@@ -1,17 +1,17 @@
 import { expect } from "chai";
 import * as sinon from "sinon";
-import { ReyEthContract } from "../../../src/lib/rey-contract";
+import ReyContract from "../../../src/lib/rey-contract";
 import { ParseError, VerifyError } from "../../../src/lib/rey-token-parser";
 import ContractTokenParser from "../../../src/lib/rey-token-parser/contract-token-parser";
 import logger from "../../_utils/logger";
 import { appParams, validToken, wrongToken } from "./_fixtures";
 
 describe("JwtEthPermissionParser", () => {
-  let contract: sinon.SinonStubbedInstance<ReyEthContract>;
+  let contract: sinon.SinonStubbedInstance<ReyContract>;
   let permissionParser: ContractTokenParser;
   before(() => {
-    contract = sinon.createStubInstance(ReyEthContract);
-    permissionParser = new ContractTokenParser({ contract, logger });
+    contract = sinon.createStubInstance(ReyContract);
+    permissionParser = new ContractTokenParser({ contract, logger } as any);
   });
 
   describe("#parse", () => {

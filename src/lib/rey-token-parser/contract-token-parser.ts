@@ -1,10 +1,10 @@
-import { IReyContract } from "../rey-contract";
+import ReyContract from "rey-sdk/dist/contracts/rey";
 import { VerifyError } from "./errors";
 import JwtTokenParser, { IJwtTokenParserOptions } from "./jwt-token-parser";
 import { AppParams, ITokenParser } from "./types";
 
 export default class ContractTokenParser extends JwtTokenParser implements ITokenParser {
-  private contract: IReyContract;
+  private contract: ReyContract;
 
   constructor(opts: IContractTokenParserOptions) {
     super(opts);
@@ -31,5 +31,5 @@ export default class ContractTokenParser extends JwtTokenParser implements IToke
 }
 
 type IContractTokenParserOptions = IJwtTokenParserOptions & {
-  contract: IReyContract;
+  contract: ReyContract;
 };
