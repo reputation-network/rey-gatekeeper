@@ -1,6 +1,8 @@
 import * as express from "express";
 import HttpError, { HttpStatus } from "../lib/errors/http-error";
 import { AppParams, ITokenParser, ParseError, VerifyError } from "../lib/rey-token-parser";
+import { validateSignature } from "rey-sdk/dist/utils/struct-validations"
+import { normalizeSignature, reyHash } from "rey-sdk/dist/utils"
 
 interface IGatekeeperMiddlewareOptions {
   tokenParser: ITokenParser;
@@ -23,6 +25,7 @@ export default function makeGatekeeperMiddleware(opts: IGatekeeperMiddlewareOpti
       addXPermissionHeaders(appParams, req);
       addSessionHeader(appParams, req);
       addExtraReadPermissionsHeader(appParams, req);
+      await validateVerifierSignatureHeader(req, authCredentials, appParams);
       // Remove the authorization header, so proxy middleware is able to add its authorization (if any)
       req.headers.authorization = "";
       next();
@@ -106,6 +109,23 @@ function addExtraReadPermissionsHeader(appParams: AppParams, req: express.Reques
   });
 }
 
+/*
+ * Validates that the sender is the session's verifier
+ */
+function validateVerifierSignatureHeader(req: express.Request, authCredentials: string, appParams: AppParams) {
+  const verifier = appParams.request.session.verifier;
+  const signatureHeader = req.headers["x-verifier-signature"] as string|undefined;
+  if (!signatureHeader) {
+    throw new HttpError(HttpStatus.BAD_REQUEST, "No x-verifier-signature header was provided");
+  }
+  try {
+    const signature = normalizeSignature(decodeHeaderValue(signatureHeader));
+    validateSignature(reyHash([authCredentials]), signature, verifier);
+  } catch {
+    throw new HttpError(HttpStatus.UNAUTHORIZED, "Invalid x-verifier-signature");
+  }
+}
+
 /**
  * Returns a header-safe value of the provided mixed value.
  * Encode: base64.generate(json.generate(value))
@@ -114,4 +134,14 @@ function addExtraReadPermissionsHeader(appParams: AppParams, req: express.Reques
  */
 function encodeHeaderValue(value: any): string {
   return Buffer.from(JSON.stringify(value)).toString("base64");
+}
+
+/**
+ * Returns a header-safe value of the provided mixed value.
+ * Encode: base64.generate(json.generate(value))
+ * Decode: json.parse(base64.parse(encoded))
+ * @param value
+ */
+function decodeHeaderValue(value: any): string {
+  return JSON.parse(Buffer.from(value, "base64").toString());
 }

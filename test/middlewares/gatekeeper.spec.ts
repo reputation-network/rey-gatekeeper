@@ -6,7 +6,8 @@ import * as sinon from "sinon";
 import HttpError from "../../src/lib/errors/http-error";
 import { ContractTokenParser, ParseError, VerifyError } from "../../src/lib/rey-token-parser";
 import gatekeeper from "../../src/middlewares/gatekeeper";
-import { appParams } from "../lib/rey-token-parser/_fixtures";
+import { appParams, verifierAddress, verifierPrivateKey } from "../lib/rey-token-parser/_fixtures";
+import * as SignStrategy from "rey-sdk/dist/sign-strategies";
 
 describe("Gatekeeper middleware", () => {
   const tokenParser = sinon.createStubInstance(ContractTokenParser);
@@ -73,9 +74,28 @@ describe("Gatekeeper middleware", () => {
     await gk(req, res, next);
     expect(next).to.have.been.calledOnceWith(error);
   });
-  describe("with valid authorization credentials", () => {
-    beforeEach(() => {
-      req.headers.authorization = `bearer IM_AN_ACCESS_TOKEN`;
+  it("calls next with HttpError 400 if token parser passes but there is no verifier signature", async () => {
+    req.headers.authorization = `bearer IM_AN_ACCESS_TOKEN`;
+    await gk(req, res, next);
+    const error = next.getCall(0).args[0];
+    expect(error).to.be.an.instanceof(HttpError);
+    expect(error).to.haveOwnProperty("statusCode").which.equals(400);
+  });
+  it("calls next with HttpError 401 if token parser passes but has invalid verifier signature", async () => {
+    req.headers.authorization = `bearer IM_AN_ACCESS_TOKEN`;
+    const signature = await SignStrategy.privateKey(verifierPrivateKey)("whatever");
+    req.headers['x-verifier-signature'] = Buffer.from(JSON.stringify(signature)).toString("base64");
+    await gk(req, res, next);
+    const error = next.getCall(0).args[0];
+    expect(error).to.be.an.instanceof(HttpError);
+    expect(error).to.haveOwnProperty("statusCode").which.equals(401);
+  });
+  describe("with valid authorization credentials and verifier signature", () => {
+    beforeEach(async () => {
+      const authCredentials = "IM_AN_ACCESS_TOKEN";
+      req.headers.authorization = `bearer ${authCredentials}`;
+      const signature = await SignStrategy.privateKey(verifierPrivateKey)(authCredentials);
+      req.headers['x-verifier-signature'] = Buffer.from(JSON.stringify(signature)).toString("base64");
     });
     it("calls next with no error", async () => {
       await gk(req, res, next);

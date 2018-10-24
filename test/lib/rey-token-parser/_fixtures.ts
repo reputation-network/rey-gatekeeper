@@ -1,6 +1,9 @@
 import JWT from "jsonwebtoken";
 import { AppParams } from "rey-sdk";
+import { privateKeyFromSeed, privateKeyToAddress } from "../../utils";
 
+export const verifierPrivateKey = privateKeyFromSeed("d");
+export const verifierAddress = privateKeyToAddress(verifierPrivateKey);
 export const appParams = new AppParams({
   request: {
     readPermission: {
@@ -17,7 +20,7 @@ export const appParams = new AppParams({
     },
     session: {
       subject: `0x${"a".repeat(40)}`,
-      verifier: `0x${"9".repeat(40)}`,
+      verifier: verifierAddress,
       fee: 1000,
       nonce: 1531402911501,
       signature: [
