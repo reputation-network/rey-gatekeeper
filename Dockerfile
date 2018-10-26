@@ -1,5 +1,5 @@
 #### Development dependencies
-FROM node:8-alpine AS development_depenendecies
+FROM node:8-alpine AS development_dependencies
 
 WORKDIR /app
 # This is required to install packages from github
@@ -12,7 +12,7 @@ COPY yarn.lock ./
 RUN yarn install
 
 ### Development
-FROM development_depenendecies AS development
+FROM development_dependencies AS development
 COPY . .
 CMD [ "yarn", "start" ]
 
@@ -22,7 +22,7 @@ RUN yarn build
 RUN rm $(find src -name *.ts)
 
 #### Production dependencies
-FROM development_depenendecies AS production_dependencies
+FROM development_dependencies AS production_dependencies
 WORKDIR /app
 RUN yarn install --production
 # FIXME: We use ts paths for aliasing this usually, once it is published it will not be necessary

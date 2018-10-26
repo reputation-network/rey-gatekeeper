@@ -6,7 +6,8 @@ import * as sinon from "sinon";
 import HttpError from "../../src/lib/errors/http-error";
 import { ContractTokenParser, ParseError, VerifyError } from "../../src/lib/rey-token-parser";
 import gatekeeper from "../../src/middlewares/gatekeeper";
-import { appParams, verifierAddress, verifierPrivateKey } from "../lib/rey-token-parser/_fixtures";
+import { appParams, verifierAddress, verifierPrivateKey, readerPrivateKey } from "../lib/rey-token-parser/_fixtures";
+import { RequestEncryption } from "rey-sdk/dist/utils";
 import * as SignStrategy from "rey-sdk/dist/sign-strategies";
 
 describe("Gatekeeper middleware", () => {
@@ -15,10 +16,13 @@ describe("Gatekeeper middleware", () => {
   let req: express.Request;
   let res: express.Response;
   let next: express.NextFunction & sinon.SinonSpy;
+  let encryptionKey: RequestEncryption.Key;
+  function encodeHeader(header: any) { return Buffer.from(JSON.stringify(header)).toString("base64"); }
 
   beforeEach("initialize req res", () => {
     req = new http.IncomingMessage(new net.Socket()) as express.Request;
     res = new http.ServerResponse(req) as express.Response;
+    res.locals = {};
     next = sinon.spy();
   });
   beforeEach("prepare default stubs", () => {
@@ -84,18 +88,49 @@ describe("Gatekeeper middleware", () => {
   it("calls next with HttpError 401 if token parser passes but has invalid verifier signature", async () => {
     req.headers.authorization = `bearer IM_AN_ACCESS_TOKEN`;
     const signature = await SignStrategy.privateKey(verifierPrivateKey)("whatever");
-    req.headers['x-verifier-signature'] = Buffer.from(JSON.stringify(signature)).toString("base64");
+    req.headers['x-verifier-signature'] = encodeHeader(signature);
     await gk(req, res, next);
     const error = next.getCall(0).args[0];
     expect(error).to.be.an.instanceof(HttpError);
     expect(error).to.haveOwnProperty("statusCode").which.equals(401);
   });
-  describe("with valid authorization credentials and verifier signature", () => {
+  it("calls next with HttpError 401 if encryption key signature is not valid", async () => {
+    const authCredentials = "IM_AN_ACCESS_TOKEN";
+    req.headers.authorization = `bearer ${authCredentials}`;
+    const verifierSignature = await SignStrategy.privateKey(verifierPrivateKey)(authCredentials);
+    req.headers['x-verifier-signature'] = encodeHeader(verifierSignature);
+    encryptionKey = await RequestEncryption.createKey();
+    req.headers['x-encryption-key'] = encodeHeader(RequestEncryption.exportKey(encryptionKey));
+    const encryptionKeySignature = await SignStrategy.privateKey(readerPrivateKey)("whatever");
+    req.headers['x-encryption-key-signature'] = encodeHeader(encryptionKeySignature);
+
+    await gk(req, res, next);
+    const error = next.getCall(0).args[0];
+    expect(error).to.be.an.instanceof(HttpError);
+    expect(error).to.haveOwnProperty("statusCode").which.equals(401);
+  });
+  xit("calls next with HttpError 400 if encryption key is missing", async () => {
+    const authCredentials = "IM_AN_ACCESS_TOKEN";
+    req.headers.authorization = `bearer ${authCredentials}`;
+    const verifierSignature = await SignStrategy.privateKey(verifierPrivateKey)(authCredentials);
+    req.headers['x-verifier-signature'] = encodeHeader(verifierSignature);
+    await gk(req, res, next);
+    const error = next.getCall(0).args[0];
+    expect(error).to.be.an.instanceof(HttpError);
+    expect(error).to.haveOwnProperty("statusCode").which.equals(400);
+  });
+
+  describe("with valid authorization credentials, verifier signature, and encryption key", () => {
     beforeEach(async () => {
       const authCredentials = "IM_AN_ACCESS_TOKEN";
       req.headers.authorization = `bearer ${authCredentials}`;
-      const signature = await SignStrategy.privateKey(verifierPrivateKey)(authCredentials);
-      req.headers['x-verifier-signature'] = Buffer.from(JSON.stringify(signature)).toString("base64");
+      const verifierSignature = await SignStrategy.privateKey(verifierPrivateKey)(authCredentials);
+      req.headers['x-verifier-signature'] = encodeHeader(verifierSignature);
+
+      encryptionKey = await RequestEncryption.createKey();
+      req.headers['x-encryption-key'] = encodeHeader(RequestEncryption.exportKey(encryptionKey));
+      const encryptionKeySignature = await SignStrategy.privateKey(readerPrivateKey)(req.headers['x-encryption-key']);
+      req.headers['x-encryption-key-signature'] = encodeHeader(encryptionKeySignature);
     });
     it("calls next with no error", async () => {
       await gk(req, res, next);
@@ -120,6 +155,10 @@ describe("Gatekeeper middleware", () => {
       const expectedHeader = Buffer.from(JSON.stringify(appParams.extraReadPermissions)).toString("base64");
       expect(req.headers).to.haveOwnProperty("x-extra-read-permissions")
         .which.equals(expectedHeader);
+    });
+    it("injects public key to encrypt output", async () => {
+      await gk(req, res, next);
+      expect(RequestEncryption.exportKey(res.locals.key)).to.eql(RequestEncryption.exportKey(encryptionKey));
     });
   });
 });

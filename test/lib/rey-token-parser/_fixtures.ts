@@ -4,10 +4,12 @@ import { privateKeyFromSeed, privateKeyToAddress } from "../../utils";
 
 export const verifierPrivateKey = privateKeyFromSeed("d");
 export const verifierAddress = privateKeyToAddress(verifierPrivateKey);
+export const readerPrivateKey = privateKeyFromSeed("c");
+export const readerAddress = privateKeyToAddress(readerPrivateKey);
 export const appParams = new AppParams({
   request: {
     readPermission: {
-      reader: `0x${"c".repeat(40)}`,
+      reader: readerAddress,
       source: `0x${"b".repeat(40)}`,
       subject: `0x${"a".repeat(40)}`,
       manifest: `0x${"d".repeat(64)}`,

@@ -235,6 +235,13 @@
   dependencies:
     "@types/express" "*"
 
+"@types/node-rsa@^0.4.3":
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/@types/node-rsa/-/node-rsa-0.4.3.tgz#7e87b819f654780445dffabb49d4ad7e8d2eec36"
+  integrity sha512-WIqdmZ1jyTuYERTeZ7Af/QgcKvCvhbnhdTsoZuFidtjASoubklRFqLJ+G4MaygJvNFHE86KiuxxPUG4dPoWMww==
+  dependencies:
+    "@types/node" "*"
+
 "@types/node@*":
   version "10.9.4"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.9.4.tgz#0f4cb2dc7c1de6096055357f70179043c33e9897"
@@ -480,6 +487,11 @@ asn1.js@^4.0.0:
     bn.js "^4.0.0"
     inherits "^2.0.1"
     minimalistic-assert "^1.0.0"
+
+asn1@0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/asn1/-/asn1-0.2.3.tgz#dac8787713c9966849fc8180777ebe9c1ddf3b86"
+  integrity sha1-2sh4dxPJlmhJ/IGAd36+nB3fO4Y=
 
 asn1@~0.2.3:
   version "0.2.4"
@@ -3579,6 +3591,13 @@ nise@^1.4.4:
     path-to-regexp "^1.7.0"
     text-encoding "^0.6.4"
 
+node-rsa@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/node-rsa/-/node-rsa-1.0.1.tgz#6f7c883c4f1163f0782e7abff3cbc9d499d6bb96"
+  integrity sha512-8iKs0HgkufO4Qb1iUJChh7Dg8HcSDVD37p3yu1tAhYa+/n2CwG9/d3qE+h6OHAIsfkXHEYYgbf4c7NfoMKayng==
+  dependencies:
+    asn1 "0.2.3"
+
 normalize-package-data@^2.3.0, normalize-package-data@^2.3.2, normalize-package-data@^2.3.4, normalize-package-data@^2.3.5:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/normalize-package-data/-/normalize-package-data-2.4.0.tgz#12f95a307d58352075a04907b84ac8be98ac012f"
@@ -4337,18 +4356,21 @@ ret@~0.1.10:
   resolved "https://registry.yarnpkg.com/ret/-/ret-0.1.15.tgz#b8a4825d5bdb1fc3f6f53c2bc33f81388681c7bc"
   integrity sha512-TTlYpa+OL+vMMNG24xSlQGEJ3B/RzEfUlLct7b5G/ytav+wPrplCpVMFuwzXbkecJrb6IYo1iFb0S9v37754mg==
 
-rey-sdk@reputation-network/rey-sdk-js#0.1.0-alpha.10:
-  version "0.1.0-alpha.10"
-  resolved "https://codeload.github.com/reputation-network/rey-sdk-js/tar.gz/61d76853307526e569a8b446c98c66342b14004b"
+rey-sdk@reputation-network/rey-sdk-js#0.1.0-alpha.24:
+  version "0.1.0-alpha.24"
+  resolved "https://codeload.github.com/reputation-network/rey-sdk-js/tar.gz/6c442eae6e4c6c425f31463f2722e43096edcbd4"
   dependencies:
     "@types/ethereumjs-util" "^5.2.0"
+    "@types/node-rsa" "^0.4.3"
     "@types/webpack" "^4.4.9"
     axios "^0.18.0"
+    node-rsa "^1.0.1"
     safe-buffer "^5.1.2"
     web3-eth-accounts "^1.0.0-beta.36"
     web3-eth-contract "^1.0.0-beta.36"
     web3-eth-personal "^1.0.0-beta.36"
     web3-utils "^1.0.0-beta.36"
+    yarn "^1.10.1"
 
 rimraf@^2.6.1, rimraf@^2.6.2:
   version "2.6.2"
@@ -5686,6 +5708,11 @@ yargs@^8.0.2:
     which-module "^2.0.0"
     y18n "^3.2.1"
     yargs-parser "^7.0.0"
+
+yarn@^1.10.1:
+  version "1.10.1"
+  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.10.1.tgz#b792ba28f050ae94cd7e719dbca80639d70da76f"
+  integrity sha512-EH0H1fyfFxkE4UpG4b+VCaVY4I488I2EyQNmGjGGKmvsSIb0G3b+1IcfGYPI2gqa1du43g4ZA3jH8fXlq6oVxg==
 
 yn@^2.0.0:
   version "2.0.0"
