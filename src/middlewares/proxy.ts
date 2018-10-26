@@ -28,6 +28,10 @@ export default function makeProxyMiddleware(opts: IProxyMiddlewareOptions): Requ
         proxyRes.on("end", () => finishResponse(res, body, key));
       },
     };
+    if (!key) {
+      delete proxyOptions.selfHandleResponse;
+      delete proxyOptions.onProxyRes;
+    }
     if (url.protocol === "https:") {
       Object.assign(proxyOptions, {
         agent: https.globalAgent,
@@ -40,13 +44,12 @@ export default function makeProxyMiddleware(opts: IProxyMiddlewareOptions): Requ
   }
 }
 
-function finishResponse(res: ServerResponse, body: Buffer, key?: RequestEncryption.Key) {
+function finishResponse(res: ServerResponse, body: Buffer, key: RequestEncryption.Key) {
   try {
     const output = JSON.parse(body.toString());
-    const finalOutput = key ? RequestEncryption.encryptBody(key, output) : output;
-
+    const encryptedOutput = RequestEncryption.encryptBody(key, output);
     res.setHeader("Content-Type", "application/json");
-    res.end(JSON.stringify(finalOutput));
+    res.end(JSON.stringify(encryptedOutput));
   } catch(e) {
     console.error(e);
     res.statusCode = 502;

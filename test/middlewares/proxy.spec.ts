@@ -30,7 +30,6 @@ describe("Proxy middleware", () => {
     expect(targetServerHandler.calledOnce).to.equal(true);
     const req = targetServerHandler.getCall(0).args[0];
     expect(req.url).to.equal("/data");
-    expect(response.body).to.eql(body);
   });
 
   it("ignores target.path when proxying a request to the target server", async () => {
