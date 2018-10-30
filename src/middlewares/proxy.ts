@@ -46,6 +46,7 @@ export default function makeProxyMiddleware(opts: IProxyMiddlewareOptions): Requ
     proxy(proxyOptions)(req, res, next);
   };
 }
+
 /**
  * Finish submitting the response by encrypting the output and signing the body
  */
