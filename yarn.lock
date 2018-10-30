@@ -111,13 +111,6 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/samsam/-/samsam-2.0.0.tgz#9163742ac35c12d3602dece74317643b35db6a80"
   integrity sha512-D7VxhADdZbDJ0HjUTMnSQ5xIGb4H2yWpg8k9Sf1T08zfFiQYlaxM8LZydpR4FQ2E6LZJX8IlabNZ5io4vdChwg==
 
-"@types/bn.js@*":
-  version "4.11.1"
-  resolved "https://registry.yarnpkg.com/@types/bn.js/-/bn.js-4.11.1.tgz#6fd07b93490ecf0f3501a31ea9cfd330885b10fa"
-  integrity sha512-ialVHUVjhSH/96vKDd20XGokJ9ktVdeBrDY5w7hpHva/2ZiB3ZhZ4VZQOmSYe/vpZEkDy+ydtr9hMckxw+/MMw==
-  dependencies:
-    "@types/node" "*"
-
 "@types/body-parser@*":
   version "1.17.0"
   resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.17.0.tgz#9f5c9d9bd04bb54be32d5eb9fc0d8c974e6cf58c"
@@ -155,14 +148,6 @@
   resolved "https://registry.yarnpkg.com/@types/dotenv/-/dotenv-4.0.3.tgz#ebcfc40da7bc0728b705945b7db48485ec5b4b67"
   integrity sha512-mmhpINC/HcLGQK5ikFJlLXINVvcxhlrV+ZOUJSN7/ottYl+8X4oSXzS9lBtDkmWAl96EGyGyLrNvk9zqdSH8Fw==
   dependencies:
-    "@types/node" "*"
-
-"@types/ethereumjs-util@^5.2.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@types/ethereumjs-util/-/ethereumjs-util-5.2.0.tgz#f49fe8114789ec0871721392c09318c3eb56671b"
-  integrity sha512-qwQgQqXXTRv2h2AlJef+tMEszLFkCB9dWnrJYIdAwqjubERXEc/geB+S3apRw0yQyTVnsBf8r6BhlrE8vx+3WQ==
-  dependencies:
-    "@types/bn.js" "*"
     "@types/node" "*"
 
 "@types/events@*":
@@ -292,28 +277,6 @@
   integrity sha512-orl732spRnz4+Bqwk1OnXkJUX2YhiGvMUyfn8VTGXqMZSk6jrMhBq7IuoSXMyBrpsCV5eSddPiC3S0iIafYxsQ==
   dependencies:
     "@types/superagent" "*"
-
-"@types/tapable@*":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.4.tgz#b4ffc7dc97b498c969b360a41eee247f82616370"
-  integrity sha512-78AdXtlhpCHT0K3EytMpn4JNxaf5tbqbLcbIRoQIHzpTIyjpxLQKRoxU55ujBXAtg3Nl2h/XWvfDa9dsMOd0pQ==
-
-"@types/uglify-js@*":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@types/uglify-js/-/uglify-js-3.0.3.tgz#801a5ca1dc642861f47c46d14b700ed2d610840b"
-  integrity sha512-MAT0BW2ruO0LhQKjvlipLGCF/Yx0y/cj+tT67tK3QIQDrM2+9R78HgJ54VlrE8AbfjYJJBCQCEPM5ZblPVTuww==
-  dependencies:
-    source-map "^0.6.1"
-
-"@types/webpack@^4.4.9":
-  version "4.4.11"
-  resolved "https://registry.yarnpkg.com/@types/webpack/-/webpack-4.4.11.tgz#0ca832870d55c4e92498c01d22d00d02b0f62ae9"
-  integrity sha512-NdESmbpvVEtJgs15kyZYKr5ouLYPMYt9DNG5JEgCekbG/ezFLPCzf4XcAv8caOb+b7x6ieAuSt0eoR0UkSI7RA==
-  dependencies:
-    "@types/node" "*"
-    "@types/tapable" "*"
-    "@types/uglify-js" "*"
-    source-map "^0.6.0"
 
 JSONStream@^1.0.4:
   version "1.3.4"
@@ -4356,13 +4319,11 @@ ret@~0.1.10:
   resolved "https://registry.yarnpkg.com/ret/-/ret-0.1.15.tgz#b8a4825d5bdb1fc3f6f53c2bc33f81388681c7bc"
   integrity sha512-TTlYpa+OL+vMMNG24xSlQGEJ3B/RzEfUlLct7b5G/ytav+wPrplCpVMFuwzXbkecJrb6IYo1iFb0S9v37754mg==
 
-rey-sdk@reputation-network/rey-sdk-js#0.1.0-alpha.24:
-  version "0.1.0-alpha.24"
-  resolved "https://codeload.github.com/reputation-network/rey-sdk-js/tar.gz/6c442eae6e4c6c425f31463f2722e43096edcbd4"
+rey-sdk@reputation-network/rey-sdk-js#0.1.0-alpha.26:
+  version "0.1.0-alpha.26"
+  resolved "https://codeload.github.com/reputation-network/rey-sdk-js/tar.gz/89b44b6568aaaa0aa68fe2158f421624f1fd6335"
   dependencies:
-    "@types/ethereumjs-util" "^5.2.0"
     "@types/node-rsa" "^0.4.3"
-    "@types/webpack" "^4.4.9"
     axios "^0.18.0"
     node-rsa "^1.0.1"
     safe-buffer "^5.1.2"

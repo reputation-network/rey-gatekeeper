@@ -16,8 +16,9 @@ describe("JwtEthPermissionParser", () => {
 
   describe("#parse", () => {
     it("returns the permission contents from the jwt", async () => {
-      const tokenAppAprams = await permissionParser.parse(validToken);
-      expect(tokenAppAprams).to.deep.equal(appParams);
+      const tokenAppParams = await permissionParser.parse(validToken);
+      // FIXME: Improve comparison
+      expect(JSON.stringify(tokenAppParams)).to.equal(JSON.stringify(appParams));
     });
     it("throws ParseError if jwt cant be parsed", async () => {
       try {
@@ -37,8 +38,9 @@ describe("JwtEthPermissionParser", () => {
 
   describe("#verify", () => {
     it("returns the permission contents from the jwt", async () => {
-      const tokenAppAprams = await permissionParser.verify(validToken);
-      expect(tokenAppAprams).to.deep.equal(appParams);
+      const tokenAppParams = await permissionParser.verify(validToken);
+      // FIXME: Improve comparison
+      expect(JSON.stringify(tokenAppParams)).to.equal(JSON.stringify(appParams));
     });
     it("calls contract#validateRequest", async () => {
       await permissionParser.verify(validToken);

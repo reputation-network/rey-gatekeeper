@@ -7,7 +7,9 @@ import HttpError from "../../src/lib/errors/http-error";
 import { ContractTokenParser, ParseError, VerifyError } from "../../src/lib/rey-token-parser";
 import gatekeeper from "../../src/middlewares/gatekeeper";
 import { appParams, verifierAddress, verifierPrivateKey, readerPrivateKey } from "../lib/rey-token-parser/_fixtures";
-import { RequestEncryption } from "rey-sdk/dist/utils";
+import { AppParams } from "rey-sdk";
+import { buildEncryptionKey } from "rey-sdk/dist/structs/factory";
+import { EncryptionKey } from "rey-sdk/dist/utils";
 import * as SignStrategy from "rey-sdk/dist/sign-strategies";
 
 describe("Gatekeeper middleware", () => {
@@ -16,18 +18,25 @@ describe("Gatekeeper middleware", () => {
   let req: express.Request;
   let res: express.Response;
   let next: express.NextFunction & sinon.SinonSpy;
-  let encryptionKey: RequestEncryption.Key;
+  let encryptionKey = new EncryptionKey();
   function encodeHeader(header: any) { return Buffer.from(JSON.stringify(header)).toString("base64"); }
+  function provideAppParams(extra: any) {
+    let appParams2 = new AppParams(JSON.parse(JSON.stringify(Object.assign({}, appParams, extra))));
+    tokenParser.parse.resolves(appParams2);
+    tokenParser.verify.resolves(appParams2);
+  }
 
+  before("initialize encryption key", async () => {
+    await encryptionKey.createPair();
+  });
   beforeEach("initialize req res", () => {
     req = new http.IncomingMessage(new net.Socket()) as express.Request;
     res = new http.ServerResponse(req) as express.Response;
     res.locals = {};
     next = sinon.spy();
   });
-  beforeEach("prepare default stubs", () => {
-    tokenParser.parse.resolves(appParams);
-    tokenParser.verify.resolves(appParams);
+  beforeEach("prepare default stubs", async () => {
+    provideAppParams({});
   });
 
   it("calls next with HttpError 401 if req has no authorization header", async () => {
@@ -97,12 +106,10 @@ describe("Gatekeeper middleware", () => {
   it("calls next with HttpError 401 if encryption key signature is not valid", async () => {
     const authCredentials = "IM_AN_ACCESS_TOKEN";
     req.headers.authorization = `bearer ${authCredentials}`;
-    const verifierSignature = await SignStrategy.privateKey(verifierPrivateKey)(authCredentials);
-    req.headers['x-verifier-signature'] = encodeHeader(verifierSignature);
-    encryptionKey = await RequestEncryption.createKey();
-    req.headers['x-encryption-key'] = encodeHeader(RequestEncryption.exportKey(encryptionKey));
-    const encryptionKeySignature = await SignStrategy.privateKey(readerPrivateKey)("whatever");
-    req.headers['x-encryption-key-signature'] = encodeHeader(encryptionKeySignature);
+    const signature = await SignStrategy.privateKey(verifierPrivateKey)(authCredentials);
+    req.headers['x-verifier-signature'] = encodeHeader(signature);
+
+    provideAppParams({ encryptionKey });
 
     await gk(req, res, next);
     const error = next.getCall(0).args[0];
@@ -114,6 +121,7 @@ describe("Gatekeeper middleware", () => {
     req.headers.authorization = `bearer ${authCredentials}`;
     const verifierSignature = await SignStrategy.privateKey(verifierPrivateKey)(authCredentials);
     req.headers['x-verifier-signature'] = encodeHeader(verifierSignature);
+    provideAppParams({ encryptionKey: undefined });
     await gk(req, res, next);
     const error = next.getCall(0).args[0];
     expect(error).to.be.an.instanceof(HttpError);
@@ -127,10 +135,8 @@ describe("Gatekeeper middleware", () => {
       const verifierSignature = await SignStrategy.privateKey(verifierPrivateKey)(authCredentials);
       req.headers['x-verifier-signature'] = encodeHeader(verifierSignature);
 
-      encryptionKey = await RequestEncryption.createKey();
-      req.headers['x-encryption-key'] = encodeHeader(RequestEncryption.exportKey(encryptionKey));
-      const encryptionKeySignature = await SignStrategy.privateKey(readerPrivateKey)(req.headers['x-encryption-key']);
-      req.headers['x-encryption-key-signature'] = encodeHeader(encryptionKeySignature);
+      const signedEncryptionKey = await buildEncryptionKey(encryptionKey, SignStrategy.privateKey(readerPrivateKey));
+      provideAppParams({ encryptionKey: signedEncryptionKey });
     });
     it("calls next with no error", async () => {
       await gk(req, res, next);
@@ -158,7 +164,7 @@ describe("Gatekeeper middleware", () => {
     });
     it("injects public key to encrypt output", async () => {
       await gk(req, res, next);
-      expect(RequestEncryption.exportKey(res.locals.key)).to.eql(RequestEncryption.exportKey(encryptionKey));
+      expect(res.locals.key.toJSON().publicKey).to.deep.equal(encryptionKey.toJSON().publicKey);
     });
   });
 });

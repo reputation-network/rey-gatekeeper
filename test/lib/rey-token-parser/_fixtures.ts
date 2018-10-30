@@ -6,11 +6,13 @@ export const verifierPrivateKey = privateKeyFromSeed("d");
 export const verifierAddress = privateKeyToAddress(verifierPrivateKey);
 export const readerPrivateKey = privateKeyFromSeed("c");
 export const readerAddress = privateKeyToAddress(readerPrivateKey);
+export const sourcePrivateKey = privateKeyFromSeed("b");
+export const sourceAddress = privateKeyToAddress(sourcePrivateKey);
 export const appParams = new AppParams({
   request: {
     readPermission: {
       reader: readerAddress,
-      source: `0x${"b".repeat(40)}`,
+      source: sourceAddress,
       subject: `0x${"a".repeat(40)}`,
       manifest: `0x${"d".repeat(64)}`,
       expiration: "1530000000",
@@ -53,6 +55,15 @@ export const appParams = new AppParams({
       ],
     },
   ],
+  encryptionKey: {
+    publicKey: "-----BEGIN PUBLIC KEY-----\nMFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJtTffmmVumQi89aVYWoAzyEts4kiIhD\n" +
+               "Zo7ZPmgVnaKV00qEmVfejQK6p6GTQ5jX3Vj+2jnmUkN9x0ce3PYRqScCAwEAAQ==\n-----END PUBLIC KEY-----",
+    signature: [
+      "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+      "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+      "0x1c",
+    ],
+  },
 });
 
 export const validToken = JWT.sign({ ...appParams }, "", { algorithm: "none" });

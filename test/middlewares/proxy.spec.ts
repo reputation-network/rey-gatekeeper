@@ -5,7 +5,11 @@ import sinon from "sinon";
 import request from "supertest";
 import proxy from "../../src/middlewares/proxy";
 import logger from "../_utils/logger";
-import { RequestEncryption } from "rey-sdk/dist/utils";
+import { EncryptionKey } from "rey-sdk/dist/utils";
+import * as SignStrategy from "rey-sdk/dist/sign-strategies";
+import { sourceAddress, sourcePrivateKey } from "../lib/rey-token-parser/_fixtures";
+import { validateSignature } from "rey-sdk/dist/utils/struct-validations"
+import { normalizeSignature, reyHash } from "rey-sdk/dist/utils"
 
 describe("Proxy middleware", () => {
   let targetServerHandler: sinon.SinonSpy;
@@ -21,8 +25,9 @@ describe("Proxy middleware", () => {
     });
     targetServer.listen(1024, done);
   });
+  const signStrategy = SignStrategy.privateKey(sourcePrivateKey);
   afterEach("teardown server", (done) => targetServer.close(done));
-  const createProxyServer = (target: string) => express().use(localsMiddleware).use(proxy({target, logger}));
+  const createProxyServer = (target: string) => express().use(localsMiddleware).use(proxy({target, logger, signStrategy}));
 
   it("proxies request to the target server", async () => {
     const proxyServer = createProxyServer("http://localhost:1024");
@@ -41,7 +46,8 @@ describe("Proxy middleware", () => {
   });
 
   it("encrypts target's response when a public key is given", async () => {
-    const key = await RequestEncryption.createKey();
+    const key = new EncryptionKey();
+    await key.createPair();
     localsMiddleware = (req, res, next) => {
       res.locals.key = key;
       next();
@@ -51,7 +57,22 @@ describe("Proxy middleware", () => {
     expect(targetServerHandler.calledOnce).to.equal(true);
     const req = targetServerHandler.getCall(0).args[0];
     expect(req.url).to.equal("/data");
-    expect(RequestEncryption.decryptBody(key, response.body)).to.eql(body);
+    expect(key.decrypt(response.body)).to.deep.equal(body);
+  });
+
+  it("signs target's response when a public key is given", async () => {
+    const key = new EncryptionKey();
+    await key.createPair();
+    localsMiddleware = (req, res, next) => {
+      res.locals.key = key;
+      next();
+    }
+    const proxyServer = createProxyServer("http://localhost:1024/api/1");
+    const response = await request(proxyServer).get("/data");
+    expect(targetServerHandler.calledOnce).to.equal(true);
+    const req = targetServerHandler.getCall(0).args[0];
+    const signature = JSON.parse(Buffer.from(response.header['x-app-signature'], "base64").toString());
+    validateSignature(reyHash([response.body]), normalizeSignature(signature), sourceAddress);
   });
 
   context("when target has auth", () => {

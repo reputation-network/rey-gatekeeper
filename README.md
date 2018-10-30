@@ -35,6 +35,7 @@ A gatekeeper instance can be configured and tweaked via the following environmen
 - **TARGET_APP_URL**: The base of the API where a REY app is running. If url includes auth, it will be used as basic authorization between gatekeeper and the target.
 - **BLOCKCHAIN_NODE_URL**: Url of the ethereum node to connect to for executing smart contract calls.
 - **APP_ADDRESS**: The app address this gatekeeper instance is providing validation for.
+- *APP_ACCOUNT_PASSWORD*: The password for unlocking the app address's account of this app in the blockchain node. This is needed for signing responses.
 - *PORT*: Port to listen, defaults to `8080`
 - *LOG_LEVEL*: Minimum log level, defaults to `info`
 - *REY_CONTRACT_ADDRESS*: REY Smart Contract address, defaults to `0x`

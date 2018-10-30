@@ -15,6 +15,7 @@ export default function config() {
     TARGET_APP_URL: requireEnvironmentVariable("TARGET_APP_URL"),
     BLOCKCHAIN_NODE_URL: requireEnvironmentVariable("BLOCKCHAIN_NODE_URL"),
     APP_ADDRESS: requireEnvironmentVariable("APP_ADDRESS"),
+    APP_ACCOUNT_PASSWORD: process.env.APP_ACCOUNT_PASSWORD || "",
     SECURED_PATH: process.env.SECURED_PATH || "/data",
     PORT: process.env.PORT || "8080",
     LOG_LEVEL: process.env.LOG_LEVEL || "info",

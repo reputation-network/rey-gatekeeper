@@ -1,6 +1,8 @@
 import { ErrorRequestHandler, RequestHandler } from "express";
 import { StreamOptions as MorganStreamOptions } from "morgan";
 import ReyContract from "rey-sdk/dist/contracts/rey";
+import EthPersonalSignStrategy from "rey-sdk/dist/sign-strategies/eth-personal";
+import { SignStrategy } from "rey-sdk/dist/types";
 import winston, { Logger } from "winston";
 import { Config } from "./config";
 import Memoize from "./lib/memoize";
@@ -66,6 +68,7 @@ export default class AppContext {
     return makeProxyMiddleware({
       logger: this.logger,
       target: this.config.TARGET_APP_URL,
+      signStrategy: this.signStrategy,
     });
   }
 
@@ -88,5 +91,12 @@ export default class AppContext {
       this.config.REY_CONTRACT_ADDRESS,
       { from: this.config.APP_ADDRESS},
     );
+  }
+
+  @Memoize()
+  public get signStrategy(): SignStrategy {
+    return EthPersonalSignStrategy(this.config.BLOCKCHAIN_NODE_URL,
+                                   this.config.APP_ADDRESS,
+                                   this.config.APP_ACCOUNT_PASSWORD);
   }
 }
