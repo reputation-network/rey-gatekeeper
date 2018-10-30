@@ -1,9 +1,9 @@
 import * as express from "express";
+import { normalizeSignature, reyHash } from "rey-sdk/dist/utils";
+import { RequestEncryption } from "rey-sdk/dist/utils";
+import { validateSignature } from "rey-sdk/dist/utils/struct-validations";
 import HttpError, { HttpStatus } from "../lib/errors/http-error";
 import { AppParams, ITokenParser, ParseError, VerifyError } from "../lib/rey-token-parser";
-import { validateSignature } from "rey-sdk/dist/utils/struct-validations"
-import { normalizeSignature, reyHash } from "rey-sdk/dist/utils"
-import { RequestEncryption } from "rey-sdk/dist/utils";
 
 interface IGatekeeperMiddlewareOptions {
   tokenParser: ITokenParser;
@@ -129,14 +129,14 @@ function validateVerifierSignatureHeader(req: express.Request, authCredentials: 
 }
 
 function addEncryptionKey(appParams: AppParams, req: express.Request, res: express.Response) {
-  if (req.headers['x-encryption-key'] && req.headers['x-encryption-key-signature']) {
+  if (req.headers["x-encryption-key"] && req.headers["x-encryption-key-signature"]) {
     try {
-      const signature = normalizeSignature(decodeHeaderValue(req.headers['x-encryption-key-signature']));
-      validateSignature(reyHash([req.headers['x-encryption-key']]), signature, appParams.request.readPermission.reader);
+      const signature = normalizeSignature(decodeHeaderValue(req.headers["x-encryption-key-signature"]));
+      validateSignature(reyHash([req.headers["x-encryption-key"]]), signature, appParams.request.readPermission.reader);
     } catch {
       throw new HttpError(HttpStatus.UNAUTHORIZED, "Invalid x-encryption-key-signature");
     }
-    const publicKey = decodeHeaderValue(req.headers['x-encryption-key']);
+    const publicKey = decodeHeaderValue(req.headers["x-encryption-key"]);
     res.locals.key = RequestEncryption.importKey(publicKey);
   }
   // FIXME: Throw exception once all clients send encryption keys to force encryption.
