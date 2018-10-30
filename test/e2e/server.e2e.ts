@@ -53,7 +53,7 @@ describe("[E2E] Gatekeeper Server", function() {
           expect(res.header).to.haveOwnProperty("x-powered-by")
             .which.equals("REY Gatekeeper");
           expect(res.body).to.haveOwnProperty("error")
-            .which.matches(/readPermission.+expired/);
+            .which.matches(/read permission.+expired/);
         });
     });
     it("bad readPermisison signature, responds with 401", async () => {
