@@ -129,20 +129,14 @@ function validateVerifierSignatureHeader(req: express.Request, authCredentials: 
 }
 
 function addEncryptionKey(appParams: AppParams, req: express.Request, res: express.Response) {
-  if (appParams.encryptionKey) {
-    try {
-      validateSignature(reyHash(recoverSignatureSeed(appParams.encryptionKey)),
-                        appParams.encryptionKey.signature,
-                        appParams.request.readPermission.reader);
-    } catch {
-      throw new HttpError(HttpStatus.UNAUTHORIZED, "Invalid encryption key");
-    }
-    res.locals.key = appParams.encryptionKey;
+  try {
+    validateSignature(reyHash(recoverSignatureSeed(appParams.encryptionKey)),
+                      appParams.encryptionKey.signature,
+                      appParams.request.readPermission.reader);
+  } catch {
+    throw new HttpError(HttpStatus.UNAUTHORIZED, "Invalid encryption key");
   }
-  // FIXME: Throw exception once all clients send encryption keys to force encryption.
-  // else {
-  //   throw new HttpError(HttpStatus.BAD_REQUEST, "Missing encryption key");
-  // }
+  res.locals.key = appParams.encryptionKey;
 }
 
 /**

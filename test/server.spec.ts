@@ -16,6 +16,7 @@ function makeContext(conf: Partial<Config> = {}) {
     ENABLE_HTTP_LOG: false,
     PORT: "8080",
     APP_ADDRESS: "0x31bb9d47bc8bf6422ff7dcd2ff53bc90f8f7b009",
+    APP_ACCOUNT_PASSWORD: "",
     REY_CONTRACT_ADDRESS: "0x31bb9d47bc8bf6422ff7dcd2ff53bc90f8f7b009",
     SECURED_PATH: "/data",
   }, conf));

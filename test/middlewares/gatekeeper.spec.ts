@@ -116,7 +116,7 @@ describe("Gatekeeper middleware", () => {
     expect(error).to.be.an.instanceof(HttpError);
     expect(error).to.haveOwnProperty("statusCode").which.equals(401);
   });
-  xit("calls next with HttpError 400 if encryption key is missing", async () => {
+  it("calls next with HttpError 401 if encryption key is missing", async () => {
     const authCredentials = "IM_AN_ACCESS_TOKEN";
     req.headers.authorization = `bearer ${authCredentials}`;
     const verifierSignature = await SignStrategy.privateKey(verifierPrivateKey)(authCredentials);
@@ -125,7 +125,7 @@ describe("Gatekeeper middleware", () => {
     await gk(req, res, next);
     const error = next.getCall(0).args[0];
     expect(error).to.be.an.instanceof(HttpError);
-    expect(error).to.haveOwnProperty("statusCode").which.equals(400);
+    expect(error).to.haveOwnProperty("statusCode").which.equals(401);
   });
 
   describe("with valid authorization credentials, verifier signature, and encryption key", () => {
