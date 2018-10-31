@@ -62,8 +62,8 @@ function finishResponse(res: ServerResponse, body: Buffer, key: EncryptionKey, s
     res.end(encryptedBody);
   })()
   .catch((e) => {
-      logger.error(e);
-      res.statusCode = 502;
-      res.end(e.toString());
+    logger.error(e);
+    res.statusCode = 502;
+    res.end(e.toString());
   });
 }
