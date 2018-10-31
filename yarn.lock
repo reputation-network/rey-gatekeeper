@@ -4319,9 +4319,9 @@ ret@~0.1.10:
   resolved "https://registry.yarnpkg.com/ret/-/ret-0.1.15.tgz#b8a4825d5bdb1fc3f6f53c2bc33f81388681c7bc"
   integrity sha512-TTlYpa+OL+vMMNG24xSlQGEJ3B/RzEfUlLct7b5G/ytav+wPrplCpVMFuwzXbkecJrb6IYo1iFb0S9v37754mg==
 
-rey-sdk@reputation-network/rey-sdk-js#0.1.0-alpha.26:
-  version "0.1.0-alpha.26"
-  resolved "https://codeload.github.com/reputation-network/rey-sdk-js/tar.gz/89b44b6568aaaa0aa68fe2158f421624f1fd6335"
+rey-sdk@reputation-network/rey-sdk-js#0.1.0-alpha.28:
+  version "0.1.0-alpha.28"
+  resolved "https://codeload.github.com/reputation-network/rey-sdk-js/tar.gz/07ed625c7321296774d4b55d84d4b17cadd2448e"
   dependencies:
     "@types/node-rsa" "^0.4.3"
     axios "^0.18.0"
