@@ -15,13 +15,14 @@ describe("Proxy middleware", () => {
   let targetServerHandler: sinon.SinonSpy;
   let targetServer: http.Server;
   let localsMiddleware: express.RequestHandler;
-  const body = { some: "value" };
+  let body: string;
   beforeEach("setup target server", (done) => {
+    body = JSON.stringify({ some: "value" });
     localsMiddleware = (req, res, next) => { next(); };
     targetServerHandler = sinon.spy();
     targetServer = http.createServer((req, res) => {
       targetServerHandler(req, res);
-      res.end(JSON.stringify(body));
+      res.end(body);
     });
     targetServer.listen(1024, done);
   });
@@ -57,7 +58,24 @@ describe("Proxy middleware", () => {
     expect(targetServerHandler.calledOnce).to.equal(true);
     const req = targetServerHandler.getCall(0).args[0];
     expect(req.url).to.equal("/data");
-    expect(key.decrypt(response.body)).to.deep.equal(body);
+    expect(key.decrypt(response.body)).to.deep.equal(JSON.parse(body));
+  });
+
+  it("returns an error when a public key is given but body is not valid json", async () => {
+    body = "this is just not json";
+    const key = new EncryptionKey();
+    await key.createPair();
+    localsMiddleware = (req, res, next) => {
+      res.locals.key = key;
+      next();
+    }
+    const proxyServer = createProxyServer("http://localhost:1024/api/1");
+    const response = await request(proxyServer).get("/data");
+    expect(targetServerHandler.calledOnce).to.equal(true);
+    const req = targetServerHandler.getCall(0).args[0];
+    expect(req.url).to.equal("/data");
+    expect(response.status).to.equal(502);
+    expect(response.body).to.have.property("error");
   });
 
   it("signs target's response when a public key is given", async () => {

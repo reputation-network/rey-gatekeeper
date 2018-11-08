@@ -52,18 +52,18 @@ export default function makeProxyMiddleware(opts: IProxyMiddlewareOptions): Requ
  */
 function finishResponse(res: ServerResponse, body: Buffer, key: EncryptionKey, signStrategy: SignStrategy,
                         logger: winston.Logger) {
+  res.setHeader("Content-Type", "application/json");
   (async () => {
     const output = JSON.parse(body.toString());
     const encryptedOutput = key.encrypt(output);
     const encryptedBody = JSON.stringify(encryptedOutput);
     const signature = await signStrategy(encryptedBody);
-    res.setHeader("Content-Type", "application/json");
     res.setHeader("x-app-signature", encodeHeaderValue(signature));
     res.end(encryptedBody);
   })()
   .catch((e) => {
     logger.error(e);
     res.statusCode = 502;
-    res.end(e.toString());
+    res.end(JSON.stringify({ error: e.toString() }));
   });
 }
