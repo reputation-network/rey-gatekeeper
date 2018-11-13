@@ -150,11 +150,11 @@ export function encodeHeaderValue(value: any): string {
 }
 
 /**
- * Returns a header-safe value of the provided mixed value.
+ * Returns the value of the provided header.
  * Encode: base64.generate(json.generate(value))
  * Decode: json.parse(base64.parse(encoded))
  * @param value
  */
-function decodeHeaderValue(value: any): string {
+function decodeHeaderValue(value: string): any {
   return JSON.parse(Buffer.from(value, "base64").toString());
 }
