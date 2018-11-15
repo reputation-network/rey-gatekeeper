@@ -4319,9 +4319,23 @@ ret@~0.1.10:
   resolved "https://registry.yarnpkg.com/ret/-/ret-0.1.15.tgz#b8a4825d5bdb1fc3f6f53c2bc33f81388681c7bc"
   integrity sha512-TTlYpa+OL+vMMNG24xSlQGEJ3B/RzEfUlLct7b5G/ytav+wPrplCpVMFuwzXbkecJrb6IYo1iFb0S9v37754mg==
 
-rey-sdk@reputation-network/rey-sdk-js#0.1.0-alpha.29:
-  version "0.1.0-alpha.29"
-  resolved "https://codeload.github.com/reputation-network/rey-sdk-js/tar.gz/2b89711e60565a8225b08e80d8b51e97141cd252"
+rey-sdk@reputation-network/rey-sdk-js#0.1.0-alpha.32:
+  version "0.1.0-alpha.32"
+  resolved "https://codeload.github.com/reputation-network/rey-sdk-js/tar.gz/d1e5b07a8703ea7d1c5c0b667b714a029d8e6937"
+  dependencies:
+    "@types/node-rsa" "^0.4.3"
+    axios "^0.18.0"
+    node-rsa "^1.0.1"
+    safe-buffer "^5.1.2"
+    web3-eth-accounts "^1.0.0-beta.36"
+    web3-eth-contract "^1.0.0-beta.36"
+    web3-eth-personal "^1.0.0-beta.36"
+    web3-utils "^1.0.0-beta.36"
+    yarn "^1.10.1"
+
+rey-sdk@reputation-network/rey-sdk-js#0.1.0-alpha.33:
+  version "0.1.0-alpha.33"
+  resolved "https://codeload.github.com/reputation-network/rey-sdk-js/tar.gz/7ec5e14b76b80fa612edfa576c41971e71aba7b5"
   dependencies:
     "@types/node-rsa" "^0.4.3"
     axios "^0.18.0"
