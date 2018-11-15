@@ -19,8 +19,8 @@ export default function config() {
     SECURED_PATH: process.env.SECURED_PATH || "/data",
     PORT: process.env.PORT || "8080",
     LOG_LEVEL: process.env.LOG_LEVEL || "info",
-    ENABLE_XFWD: Boolean(Number(process.env.ENABLE_HTTP_LOG || "1")),
     ENABLE_HTTP_LOG: Boolean(Number(process.env.ENABLE_HTTP_LOG)),
+    ENABLE_XFWD: Boolean(Number(process.env.ENABLE_XFWD || "1")),
     REY_CONTRACT_ADDRESS: process.env.REY_CONTRACT_ADDRESS || "0x76C19376b275A5d77858c6F6d5322311eEb92cf5",
   };
 }
