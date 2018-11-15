@@ -26,9 +26,12 @@ describe("Proxy middleware", () => {
     });
     targetServer.listen(1024, done);
   });
+  const enableXfwd = true;
   const signStrategy = SignStrategy.privateKey(sourcePrivateKey);
   afterEach("teardown server", (done) => targetServer.close(done));
-  const createProxyServer = (target: string) => express().use(localsMiddleware).use(proxy({target, logger, signStrategy}));
+  const createProxyServer = (target: string) =>
+    express().use(localsMiddleware)
+      .use(proxy({target, logger, signStrategy, enableXfwd}));
 
   it("proxies request to the target server", async () => {
     const proxyServer = createProxyServer("http://localhost:1024");
