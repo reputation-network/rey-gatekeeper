@@ -78,6 +78,7 @@ export default class AppContext {
       logger: this.logger,
       target: this.config.TARGET_APP_URL,
       signStrategy: this.signStrategy,
+      enableXfwd: this.config.ENABLE_XFWD,
     });
   }
 

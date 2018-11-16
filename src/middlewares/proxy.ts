@@ -12,6 +12,7 @@ interface IProxyMiddlewareOptions {
   logger: winston.Logger;
   target: string;
   signStrategy: SignStrategy;
+  enableXfwd: boolean;
 }
 
 export default function makeProxyMiddleware(opts: IProxyMiddlewareOptions): RequestHandler {
@@ -23,7 +24,7 @@ export default function makeProxyMiddleware(opts: IProxyMiddlewareOptions): Requ
       logProvider: () => opts.logger,
       target: `${url.protocol}//${url.host}`,
       auth: url.auth,
-      xfwd: true,
+      xfwd: opts.enableXfwd,
       selfHandleResponse: true,
       onProxyRes: (proxyRes, _, res2) => {
         let body = Buffer.from("");
