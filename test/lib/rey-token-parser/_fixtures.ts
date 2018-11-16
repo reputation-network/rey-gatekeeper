@@ -1,5 +1,5 @@
 import JWT from "jsonwebtoken";
-import { AppParams } from "rey-sdk";
+import { AppParams, Proof } from "rey-sdk";
 import { privateKeyFromSeed, privateKeyToAddress } from "../../utils";
 
 export const verifierPrivateKey = privateKeyFromSeed("d");
@@ -64,6 +64,24 @@ export const appParams = new AppParams({
       "0x1c",
     ],
   },
+});
+
+export const proof = new Proof({
+  writePermission: {
+    writer: appParams.request.readPermission.source,
+    subject: appParams.request.readPermission.subject,
+    signature: [
+      "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "0x00",
+    ],
+  },
+  session: appParams.request.session,
+  signature: [
+    "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "0x00",
+  ],
 });
 
 export const validToken = JWT.sign({ ...appParams }, "", { algorithm: "none" });

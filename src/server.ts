@@ -11,6 +11,7 @@ export default function makeGatekeeperServer(ctx: Context) {
   app.use(ctx.xPoweredByMiddleware);
   app.get("/healthcheck", ctx.healthcheckController);
   app.all(ctx.config.SECURED_PATH, ctx.gatekeeperMiddleware);
+  app.post(ctx.config.CALLBACK_PATH, ctx.callbackMiddleware);
   app.use(ctx.proxyMiddleware);
   app.use(ctx.errorHandlerMiddleware);
   return app;

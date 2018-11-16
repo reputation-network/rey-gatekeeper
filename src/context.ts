@@ -12,6 +12,7 @@ import { ContractTokenParser, ITokenParser } from "./lib/rey-token-parser";
 import makeHealthcheckController from "./controllers/healthcheck";
 import makeErrorHandlerMiddleware from "./middlewares/error-handler";
 import makeGatekeeperMiddleware from "./middlewares/gatekeeper";
+import makeCallbackMiddleware from "./middlewares/callback";
 import makeProxyMiddleware from "./middlewares/proxy";
 import makeXPoweredByMiddleware from "./middlewares/x-powered-by";
 
@@ -60,6 +61,14 @@ export default class AppContext {
   public get gatekeeperMiddleware(): RequestHandler {
     return makeGatekeeperMiddleware({
       tokenParser: this.permissionParser,
+    });
+  }
+
+  @Memoize()
+  public get callbackMiddleware(): RequestHandler {
+    return makeCallbackMiddleware({
+      contract: this.reyContract,
+      appAddress: this.config.APP_ADDRESS,
     });
   }
 
