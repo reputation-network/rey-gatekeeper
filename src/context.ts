@@ -10,9 +10,9 @@ import LocalReyContract from "./lib/rey-contract";
 import { ContractTokenParser, ITokenParser } from "./lib/rey-token-parser";
 
 import makeHealthcheckController from "./controllers/healthcheck";
+import makeCallbackMiddleware from "./middlewares/callback";
 import makeErrorHandlerMiddleware from "./middlewares/error-handler";
 import makeGatekeeperMiddleware from "./middlewares/gatekeeper";
-import makeCallbackMiddleware from "./middlewares/callback";
 import makeProxyMiddleware from "./middlewares/proxy";
 import makeXPoweredByMiddleware from "./middlewares/x-powered-by";
 

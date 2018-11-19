@@ -1,7 +1,7 @@
 import * as express from "express";
-import HttpError, { HttpStatus } from "../lib/errors/http-error";
 import ReyContract from "rey-sdk/dist/contracts/rey";
 import { Transaction } from "rey-sdk/dist/structs";
+import HttpError, { HttpStatus } from "../lib/errors/http-error";
 
 interface ICallbackMiddlewareOptions {
   contract: ReyContract;

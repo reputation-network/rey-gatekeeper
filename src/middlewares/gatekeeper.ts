@@ -27,7 +27,8 @@ export default function makeGatekeeperMiddleware(opts: IGatekeeperMiddlewareOpti
       addSessionHeader(appParams, req);
       addExtraReadPermissionsHeader(appParams, req);
       validateVerifierSignatureHeader(req, authCredentials, appParams);
-      addEncryptionKey(appParams, req, res);
+      validateEncryptionKey(appParams, res);
+      addLocals(appParams, res);
       // Remove the authorization header, so proxy middleware is able to add its authorization (if any)
       req.headers.authorization = "";
       next();
@@ -97,6 +98,9 @@ function addXPermissionHeaders(appParams: AppParams, req: express.Request) {
   });
 }
 
+/**
+ * Adds session as custom header to the request
+ */
 function addSessionHeader(appParams: AppParams, req: express.Request) {
   const session = appParams.request.session;
   Object.assign(req.headers, {
@@ -128,7 +132,10 @@ function validateVerifierSignatureHeader(req: express.Request, authCredentials: 
   }
 }
 
-function addEncryptionKey(appParams: AppParams, req: express.Request, res: express.Response) {
+/*
+ * Validates encryption key
+ */
+function validateEncryptionKey(appParams: AppParams, res: express.Response) {
   try {
     validateSignature(reyHash(recoverSignatureSeed(appParams.encryptionKey)),
                       appParams.encryptionKey.signature,
@@ -136,7 +143,14 @@ function addEncryptionKey(appParams: AppParams, req: express.Request, res: expre
   } catch {
     throw new HttpError(HttpStatus.UNAUTHORIZED, "Invalid encryption key");
   }
+}
+
+/*
+ * Adds locals to be used in the next middlewares
+ */
+function addLocals(appParams: AppParams, res: express.Response) {
   res.locals.key = appParams.encryptionKey;
+  res.locals.session = appParams.request.session;
 }
 
 /**
