@@ -17,14 +17,16 @@ interface ICallbackMiddlewareOptions {
  */
 export default function makeCallbackMiddleware(opts: ICallbackMiddlewareOptions): express.RequestHandler {
   return async function callbackMiddleware(req, res, next) {
-    try {
-      const transaction = new Transaction(JSON.parse(req.body));
-      // FIXME: Implement retries
-      opts.contract.cashout(opts.appAddress, [transaction]);
-      res.end();
-      next();
-    } catch (e) {
-      next(e);
-    }
+    express.json()(req, res, () => {
+      try {
+        const transaction = new Transaction(req.body);
+        // FIXME: Implement retries
+        opts.contract.cashout(opts.appAddress, [transaction]);
+        res.end();
+        next();
+      } catch (e) {
+        next(e);
+      }
+    });
   };
 }
