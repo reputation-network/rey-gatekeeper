@@ -1,11 +1,15 @@
 import * as express from "express";
 import ReyContract from "rey-sdk/dist/contracts/rey";
 import { Transaction } from "rey-sdk/dist/structs";
+import * as winston from "winston";
 import HttpError, { HttpStatus } from "../lib/errors/http-error";
+import { isAddress } from "rey-sdk/dist/utils";
 
 interface ICallbackMiddlewareOptions {
   contract: ReyContract;
   appAddress: string;
+  appAccountPassword: string;
+  logger: winston.Logger;
 }
 
 /**
@@ -17,11 +21,15 @@ interface ICallbackMiddlewareOptions {
  */
 export default function makeCallbackMiddleware(opts: ICallbackMiddlewareOptions): express.RequestHandler {
   return async function callbackMiddleware(req, res, next) {
-    express.json()(req, res, () => {
+    express.json()(req, res, async () => {
       try {
         const transaction = new Transaction(req.body);
-        // FIXME: Implement retries
-        opts.contract.cashout(opts.appAddress, [transaction]);
+        console.log(`Cashing out transaction: ${JSON.stringify(transaction)}`);
+        (async () => {
+          // FIXME: Implement retries
+          opts.contract.cashout(opts.appAddress, opts.appAccountPassword, [transaction])
+            .catch((err) => opts.logger.error(`Cashout error:\n${err}`));
+        })();
         res.end();
         next();
       } catch (e) {

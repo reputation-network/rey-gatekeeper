@@ -69,6 +69,8 @@ export default class AppContext {
     return makeCallbackMiddleware({
       contract: this.reyContract,
       appAddress: this.config.APP_ADDRESS,
+      appAccountPassword: this.config.APP_ACCOUNT_PASSWORD,
+      logger: this.logger,
     });
   }
 
