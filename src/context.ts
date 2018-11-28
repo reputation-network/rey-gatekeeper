@@ -101,7 +101,7 @@ export default class AppContext {
     return new LocalReyContract(
       this.config.BLOCKCHAIN_NODE_URL,
       this.config.REY_CONTRACT_ADDRESS,
-      { from: this.config.APP_ADDRESS},
+      { from: this.config.APP_ADDRESS, gas: 2000000 },
     );
   }
 
